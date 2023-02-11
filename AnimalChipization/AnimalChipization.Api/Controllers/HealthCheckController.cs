@@ -6,11 +6,8 @@ namespace AnimalChipization.Api.Controllers;
 [Route("health-check")]
 public class HealthCheckController : ApiControllerBase
 {
-    private readonly ILogger<HealthCheckController> _logger;
-
-    public HealthCheckController(ILogger<HealthCheckController> logger)
+    public HealthCheckController(ILogger<HealthCheckController> logger) : base(logger)
     {
-        _logger = logger;
     }
 
     [HttpGet]
@@ -18,7 +15,7 @@ public class HealthCheckController : ApiControllerBase
     public IActionResult Get()
     {
         var response = new HealthCheckGetResponse { Message = "Ok" };
-        _logger.LogInformation("Health check perform occurred");
+        Logger.LogInformation("Health check perform occurred");
         return Ok(response);
     }
 }
