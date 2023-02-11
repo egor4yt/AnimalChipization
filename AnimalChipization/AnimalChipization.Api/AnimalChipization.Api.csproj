@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AnimalChipization.Api.Contracts\AnimalChipization.Api.Contracts.csproj" />
+      <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
+      <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+    </ItemGroup>
+
+</Project>
