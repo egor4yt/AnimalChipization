@@ -1,4 +1,3 @@
-using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
@@ -41,7 +40,7 @@ public class LocationsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPost("")]
     [ProducesResponseType(typeof(CreateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -51,17 +50,17 @@ public class LocationsController : ApiControllerBase
         try
         {
             var location = Mapper.Map<Location>(request);
-            
+
             await _locationService.CreateAsync(location);
             var response = Mapper.Map<CreateLocationsResponse>(location);
-            return Ok(response);
+            return Created($"/locations/{location.Id}", response);
         }
         catch (Exception e)
         {
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPut("{pointId:int}")]
     [ProducesResponseType(typeof(UpdateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -73,7 +72,7 @@ public class LocationsController : ApiControllerBase
         {
             var updateModel = Mapper.Map<UpdateLocationModel>(request);
             updateModel.Id = pointId;
-            
+
             var location = await _locationService.UpdateAsync(updateModel);
             var response = Mapper.Map<UpdateLocationsResponse>(location);
             return Ok(response);

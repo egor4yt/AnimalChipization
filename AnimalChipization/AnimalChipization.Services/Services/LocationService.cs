@@ -46,8 +46,8 @@ public class LocationService : ILocationService
             throw new LocationUpdateException($"Location with id {model.Id} does not exists", HttpStatusCode.NotFound);
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
-            Math.Abs(x.Longitude - model.Longitude) < 0.0001
-            && Math.Abs(x.Latitude - model.Latitude) < 0.0001
+            Math.Abs(x.Longitude - model.Longitude) < 0.01
+            && Math.Abs(x.Latitude - model.Latitude) < 0.01
             && x.Id != model.Id);
         if (locationExists)
             throw new AccountRegisterException(
