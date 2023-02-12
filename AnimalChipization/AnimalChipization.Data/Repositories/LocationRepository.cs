@@ -3,14 +3,14 @@ using AnimalChipization.Data.Repositories.Interfaces;
 
 namespace AnimalChipization.Data.Repositories;
 
-public class AccountRepository : RepositoryBase<Account>, IAccountRepository
+public class LocationRepository : RepositoryBase<Location>, ILocationRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public AccountRepository(ApplicationDbContext context) : base(context)
+    public LocationRepository(ApplicationDbContext context) : base(context)
     {
         _context = context;
     }
-    
+
     // Can bee extended by any additional methods that do not present in RepositoryBase
 }

@@ -29,7 +29,6 @@ public class AccountsController : ApiControllerBase
     {
         try
         {
-            var u = HttpContext.User;
             var account = await _accountService.GetByIdAsync(accountId);
             if (account is null) return NotFound($"Account with id {accountId} not found");
 

@@ -31,7 +31,7 @@ public class AccountService : IAccountService
 
     public async Task<Account?> GetByIdAsync(int accountId)
     {
-        if (accountId <= 0) throw new AccountRegisterException("Invalid account id", HttpStatusCode.BadRequest);
+        if (accountId <= 0) throw new AccountGetByIdException("Invalid account id", HttpStatusCode.BadRequest);
         return await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == accountId);
     }
 
@@ -69,7 +69,7 @@ public class AccountService : IAccountService
         
         var accountExist = await _accountRepository.ExistsAsync(x => x.Email == account.Email && x.Id != model.Id);
         if (accountExist)
-            throw new AccountRegisterException($"Account with email {account.Email} already exists",
+            throw new AccountRegisterException($"Account with email {model.Email} already exists",
                 HttpStatusCode.Conflict);
 
         account.FirstName = model.FirstName;
