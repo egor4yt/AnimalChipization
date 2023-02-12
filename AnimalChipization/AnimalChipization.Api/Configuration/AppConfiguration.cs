@@ -6,7 +6,7 @@ public static class AppConfiguration
 
     /* Default values */
     private static string _databaseConnectionString =
-        "host=localhost;port=5432;database=local-animal-chipization;username=user;password=password";
+        "host=localhost;port=5432;database=development-animal-chipization;username=user;password=password";
 
 
     public static string DatabaseConnectionString => _databaseConnectionString;

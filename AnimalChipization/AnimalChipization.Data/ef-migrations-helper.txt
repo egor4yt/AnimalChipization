@@ -1,0 +1,3 @@
+dotnet ef migrations add Initial --project AnimalChipization.Data --startup-project AnimalChipization.Api
+
+dotnet ef database update --project AnimalChipization.Data --startup-project AnimalChipization.Api

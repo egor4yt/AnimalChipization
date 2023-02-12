@@ -12,7 +12,7 @@ public static class ServiceCollectionExtension
         foreach (var repository in repositories)
         {
             var repositoryInterface = repository.GetInterfaces().First(x => x.Name.EndsWith(value));
-            services.AddScoped(repositoryInterface, repository);
+            services.AddTransient(repositoryInterface, repository);
         }
     }
 }
