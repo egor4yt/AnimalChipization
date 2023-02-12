@@ -22,6 +22,7 @@ public class RegistrationController : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(PostRegistrationResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Post([FromBody] PostRegistrationRequest request)
     {
         try

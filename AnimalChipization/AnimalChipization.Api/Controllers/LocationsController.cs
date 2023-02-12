@@ -20,7 +20,7 @@ public class LocationsController : ApiControllerBase
         _locationService = locationService;
     }
 
-    [HttpGet("{pointId}")]
+    [HttpGet("{pointId:int}")]
     [ProducesResponseType(typeof(GetByIdLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
@@ -41,7 +41,8 @@ public class LocationsController : ApiControllerBase
     }
     
     [HttpPost("")]
-    [ProducesResponseType(typeof(IEnumerable<CreateLocationsResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CreateLocationsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Create([FromBody] CreateLocationsRequest request)
     {

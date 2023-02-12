@@ -21,7 +21,7 @@ public class AccountsController : ApiControllerBase
         _accountService = accountService;
     }
 
-    [HttpGet("{accountId}")]
+    [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(GetByIdAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
@@ -59,8 +59,9 @@ public class AccountsController : ApiControllerBase
         }
     }
     
-    [HttpPut("{accountId}")]
+    [HttpPut("{accountId:int}")]
     [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Update([FromRoute] int accountId, [FromBody] UpdateAccountsRequest request)
     {
