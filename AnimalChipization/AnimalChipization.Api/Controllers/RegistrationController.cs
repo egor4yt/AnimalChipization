@@ -21,7 +21,6 @@ public class RegistrationController : ApiControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(PostRegistrationResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Post([FromBody] PostRegistrationRequest request)
     {

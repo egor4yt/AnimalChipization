@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using AnimalChipization.Data.Repositories.Interfaces;
+using AnimalChipization.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
@@ -10,16 +11,16 @@ namespace AnimalChipization.Api.Authentication.Basic;
 
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    private readonly IAccountRepository _accountRepository;
+    private readonly IAccountService _accountService;
 
     public BasicAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock, IAccountRepository accountRepository)
+        ISystemClock clock, IAccountService accountService)
         : base(options, logger, encoder, clock)
     {
-        _accountRepository = accountRepository;
+        _accountService = accountService;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -39,7 +40,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var authEmail = authSplit[0];
         var authPassword = authSplit.Length > 1 ? authSplit[1] : throw new Exception("Unable to get password");
 
-        var account = await _accountRepository.AuthenticateUserAsync(authEmail, authPassword);
+        var account = await _accountService.AuthenticateAsync(authEmail, authPassword);
         if (account == null) return AuthenticateResult.Fail("The username or password is not correct.");
 
         var authenticatedUser = new AuthenticatedUser("BasicAuthentication", true, account.FirstName);

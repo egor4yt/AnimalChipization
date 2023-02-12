@@ -7,6 +7,8 @@ namespace AnimalChipization.Api.Controllers;
 
 [ApiController]
 [Produces("application/json")]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public abstract class ApiControllerBase : ControllerBase
 {
     protected readonly ILogger<ApiControllerBase> Logger;

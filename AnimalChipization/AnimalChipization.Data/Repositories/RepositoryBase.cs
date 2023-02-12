@@ -23,13 +23,18 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     public virtual async Task<TEntity?> FindFirstOrDefault(Expression<Func<TEntity, bool>> match)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync();
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(match);
     }
-    
+
     public virtual async Task InsertAsync(TEntity entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> Exists(Expression<Func<TEntity, bool>> match)
+    {
+        return await _dbSet.AnyAsync(match);
     }
 }
