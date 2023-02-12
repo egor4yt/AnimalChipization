@@ -21,7 +21,12 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         return await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task<TEntity?> FindFirstOrDefault(Expression<Func<TEntity, bool>> match)
+    public IQueryable<TEntity> AsQueryable()
+    {
+        return _dbSet.AsQueryable();
+    }
+
+    public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> match)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(match);
     }
@@ -33,7 +38,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> Exists(Expression<Func<TEntity, bool>> match)
+    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match)
     {
         return await _dbSet.AnyAsync(match);
     }

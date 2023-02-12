@@ -60,6 +60,7 @@ public static class DependencyInjection
         {
             config.AddProfile(new ContractsToEntitiesMappingConfig());
             config.AddProfile(new EntitiesToContractsMappingConfig());
+            config.AddProfile(new ContractsToServicesModelsMappingConfig());
         });
 
         var mapper = mappingConfig.CreateMapper();

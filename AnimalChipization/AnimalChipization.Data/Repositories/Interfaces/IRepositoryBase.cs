@@ -6,7 +6,8 @@ namespace AnimalChipization.Data.Repositories.Interfaces;
 public interface IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     Task<List<TEntity>> GetAllAsync();
-    Task<TEntity?> FindFirstOrDefault(Expression<Func<TEntity, bool>> match);
-    Task<bool> Exists(Expression<Func<TEntity, bool>> match);
+    IQueryable<TEntity> AsQueryable();
+    Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> match);
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match);
     Task InsertAsync(TEntity entity);
 }

@@ -1,6 +1,6 @@
-namespace AnimalChipization.Api.Contracts.Accounts.GetById;
+namespace AnimalChipization.Api.Contracts.Accounts.Search;
 
-public class GetByIdAccountsResponse
+public class SearchAccountsResponse
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

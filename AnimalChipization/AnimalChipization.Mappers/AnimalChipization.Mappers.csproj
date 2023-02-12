@@ -14,6 +14,7 @@
       <ProjectReference Include="..\AnimalChipization.Api.Contracts\AnimalChipization.Api.Contracts.csproj" />
       <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
       <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj" />
+      <ProjectReference Include="..\AnimalChipization.Services\AnimalChipization.Services.csproj" />
     </ItemGroup>
 
 </Project>
