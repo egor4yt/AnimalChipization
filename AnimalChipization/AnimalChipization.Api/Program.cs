@@ -7,8 +7,12 @@ builder.ConfigureBuilder();
 
 var app = builder.Build();
 app.UpdateEnvironmentVariables();
-app.Services.GetRequiredService<ApplicationDbContext>().Database.Migrate();
 app.ConfigureMiddlewares();
+
+/* auto migrate database */
+var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+dbContext.Database.Migrate();
 
 app.UseAuthentication();
 app.UseAuthorization();

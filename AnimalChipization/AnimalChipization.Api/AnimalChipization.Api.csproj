@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Authentication" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

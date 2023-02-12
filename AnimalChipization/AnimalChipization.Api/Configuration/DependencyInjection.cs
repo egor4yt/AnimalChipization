@@ -1,9 +1,11 @@
-// using AnimalChipization.Data;
-
+using AnimalChipization.Api.Authentication.Basic;
 using AnimalChipization.Core.Extensions;
 using AnimalChipization.Data;
 using AnimalChipization.Mappers;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using AssemblyRunner = AnimalChipization.Services.AssemblyRunner;
@@ -23,6 +25,13 @@ public static class DependencyInjection
 
     private static void ConfigureAuthorization(IServiceCollection services)
     {
+        services.AddAuthentication("BasicAuthentication")
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", _ => { });
+        
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
+        });
     }
 
     private static void ConfigureInfrastructure(IServiceCollection services)
@@ -44,7 +53,7 @@ public static class DependencyInjection
         var servicesAssembly = typeof(AssemblyRunner).Assembly;
         services.RegisterServicesEndsWith("Service", servicesAssembly);
     }
-    
+
     private static void ConfigureAutomapper(IServiceCollection services)
     {
         var mappingConfig = new MapperConfiguration(config =>
