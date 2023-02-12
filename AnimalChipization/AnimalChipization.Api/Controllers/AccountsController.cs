@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnimalChipization.Api.Controllers;
 
-[Authorize]
 [Route("[controller]")]
+[AllowAnonymous]
 public class AccountsController : ApiControllerBase
 {
     private readonly IAccountService _accountService;
