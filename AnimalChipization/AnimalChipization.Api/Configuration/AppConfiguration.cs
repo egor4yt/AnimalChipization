@@ -14,7 +14,7 @@ public static class AppConfiguration
 
     public static void UpdateEnvironmentVariables(this WebApplication app)
     {
-        // if (app.Environment.IsDevelopment()) return;
+        if (app.Environment.IsDevelopment()) return;
 
         _logger = app.Services.GetRequiredService<ILogger<WebApplication>>();
 

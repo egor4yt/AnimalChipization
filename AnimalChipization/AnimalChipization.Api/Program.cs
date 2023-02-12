@@ -7,5 +7,8 @@ var app = builder.Build();
 app.UpdateEnvironmentVariables();
 app.ConfigureMiddlewares();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

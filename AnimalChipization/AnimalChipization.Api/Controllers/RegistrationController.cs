@@ -1,21 +1,39 @@
-using AnimalChipization.Api.Contracts.Account.Create;
+using AnimalChipization.Api.Contracts.Registration.Post;
+using AnimalChipization.Data.Entities;
+using AnimalChipization.Services.Services.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnimalChipization.Api.Controllers;
 
 [Route("registration")]
+[AllowAnonymous]
 public class RegistrationController : ApiControllerBase
 {
-    public RegistrationController(ILogger<RegistrationController> logger) : base(logger)
+    private readonly IAccountService _accountService;
+
+    public RegistrationController(ILogger<RegistrationController> logger, IMapper mapper,
+        IAccountService accountService) : base(logger, mapper)
     {
+        _accountService = accountService;
     }
 
     [HttpPost]
-    public IActionResult Post(PostRegistrationRequest request)
+    [ProducesResponseType(typeof(PostRegistrationResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> Post([FromBody] PostRegistrationRequest request)
     {
         try
         {
-            return Ok();
+            if (HttpContext.Request.Headers.Authorization.Count != 0) return Forbid();
+
+            var account = Mapper.Map<Account>(request);
+            await _accountService.RegisterAsync(account);
+
+            var response = Mapper.Map<PostRegistrationResponse>(account);
+            return Created($"/accounts/{response.Id}", response);
         }
         catch (Exception e)
         {

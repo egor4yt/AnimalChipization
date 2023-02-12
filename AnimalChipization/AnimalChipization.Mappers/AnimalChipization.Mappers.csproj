@@ -7,6 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AnimalChipization.Api.Contracts\AnimalChipization.Api.Contracts.csproj" />
       <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
       <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj" />
     </ItemGroup>

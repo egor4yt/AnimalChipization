@@ -28,6 +28,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     
     public virtual async Task InsertAsync(TEntity entity)
     {
+        entity.CreatedAt = DateTime.UtcNow;
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
     }

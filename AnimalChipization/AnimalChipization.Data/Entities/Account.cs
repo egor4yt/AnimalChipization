@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data.Entities;
 
+[Index("Email",IsUnique = true)]
 public class Account : EntityBase
 {
     public int Id { get; set; }
