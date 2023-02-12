@@ -1,7 +1,9 @@
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
+using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Data.Entities;
+using AnimalChipization.Services.Models.Location;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -52,6 +54,28 @@ public class LocationsController : ApiControllerBase
             
             await _locationService.CreateAsync(location);
             var response = Mapper.Map<CreateLocationsResponse>(location);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpPut("{pointId:int}")]
+    [ProducesResponseType(typeof(UpdateLocationsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Update([FromRoute] int pointId, [FromBody] UpdateLocationsRequest request)
+    {
+        try
+        {
+            var updateModel = Mapper.Map<UpdateLocationModel>(request);
+            updateModel.Id = pointId;
+            
+            var location = await _locationService.UpdateAsync(updateModel);
+            var response = Mapper.Map<UpdateLocationsResponse>(location);
             return Ok(response);
         }
         catch (Exception e)

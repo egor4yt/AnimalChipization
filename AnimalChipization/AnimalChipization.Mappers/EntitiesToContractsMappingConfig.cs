@@ -3,6 +3,7 @@ using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
+using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
@@ -26,6 +27,7 @@ public class EntitiesToContractsMappingConfig : Profile
 
         CreateMap<Location, GetByIdLocationsResponse>();
         CreateMap<Location, CreateLocationsResponse>();
+        CreateMap<Location, UpdateLocationsResponse>();
 
         #endregion
     }
