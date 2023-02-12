@@ -5,7 +5,6 @@ using AnimalChipization.Mappers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using AssemblyRunner = AnimalChipization.Services.AssemblyRunner;
@@ -27,10 +26,11 @@ public static class DependencyInjection
     {
         services.AddAuthentication("BasicAuthentication")
             .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", _ => { });
-        
+
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
+            options.AddPolicy("BasicAuthentication",
+                new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
         });
     }
 
