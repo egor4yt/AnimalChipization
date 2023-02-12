@@ -1,7 +1,5 @@
-using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data.Repositories;
 

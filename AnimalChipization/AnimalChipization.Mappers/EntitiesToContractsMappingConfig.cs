@@ -1,5 +1,6 @@
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
+using AnimalChipization.Api.Contracts.Accounts.Update;
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
@@ -13,5 +14,6 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Account, PostRegistrationResponse>();
         CreateMap<Account, GetByIdAccountsResponse>();
         CreateMap<Account, SearchAccountsResponse>();
+        CreateMap<Account, UpdateAccountsResponse>();
     }
 }

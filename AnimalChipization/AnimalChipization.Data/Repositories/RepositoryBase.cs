@@ -16,14 +16,14 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         _dbSet = context.Set<TEntity>();
     }
 
-    public virtual async Task<List<TEntity>> GetAllAsync()
-    {
-        return await _dbSet.AsNoTracking().ToListAsync();
-    }
-
     public IQueryable<TEntity> AsQueryable()
     {
         return _dbSet.AsQueryable();
+    }
+
+    public virtual async Task<List<TEntity>> GetAllAsync()
+    {
+        return await _dbSet.AsNoTracking().ToListAsync();
     }
 
     public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> match)
@@ -38,8 +38,19 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match)
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match)
     {
         return await _dbSet.AnyAsync(match);
+    }
+
+    public virtual async Task<TEntity> UpdateAsync(TEntity entityToUpdate)
+    {
+        if (_dbSet.Entry(entityToUpdate).State == EntityState.Detached) _dbSet.Attach(entityToUpdate);
+
+        _dbSet.Entry(entityToUpdate).State = EntityState.Modified;
+        _context.ChangeTracker.AutoDetectChangesEnabled = false;
+        await _context.SaveChangesAsync();
+
+        return entityToUpdate;
     }
 }

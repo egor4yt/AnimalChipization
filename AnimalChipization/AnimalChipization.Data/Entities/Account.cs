@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data.Entities;
 
-[Index("Email",IsUnique = true)]
+[Index("Email", IsUnique = true)]
 public class Account : EntityBase
 {
     public int Id { get; set; }
@@ -16,11 +16,11 @@ public class Account : EntityBase
     [Required]
     [Column(TypeName = "varchar(300)")]
     public string LastName { get; set; }
-    
+
     [Required]
     [Column(TypeName = "varchar(300)")]
     public string Email { get; set; }
-    
+
     [Required]
     [Column(TypeName = "varchar(64)")]
     public string PasswordHash { get; set; }

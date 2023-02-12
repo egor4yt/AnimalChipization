@@ -11,18 +11,17 @@ public static class MiddlewaresConfiguration
 
     private static void ConfigureSharedMiddlewares(this WebApplication app)
     {
-        
     }
-    
+
     private static void ConfigureDevelopmentMiddlewares(this WebApplication app)
     {
         if (!app.Environment.IsDevelopment()) return;
-        
+
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseDeveloperExceptionPage();
     }
-    
+
     private static void ConfigureProductionMiddlewares(this WebApplication app)
     {
         if (app.Environment.IsDevelopment()) return;

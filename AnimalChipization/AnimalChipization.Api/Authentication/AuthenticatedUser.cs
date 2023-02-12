@@ -10,10 +10,9 @@ public class AuthenticatedUser : IIdentity
         IsAuthenticated = isAuthenticated;
         Name = name;
     }
- 
+
     public string AuthenticationType { get; }
- 
-    public bool IsAuthenticated { get;}
- 
+
+    public bool IsAuthenticated { get; }
     public string Name { get; }
 }

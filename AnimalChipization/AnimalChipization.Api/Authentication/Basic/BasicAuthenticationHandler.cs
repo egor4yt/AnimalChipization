@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
-using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
@@ -25,10 +24,10 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        Response.Headers.Add("WWW-Authenticate", "Basic");
-
         if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader) == false)
-            return AuthenticateResult.Fail("Authorization header missing.");
+            return AuthenticateResult.Fail("Authorization header is missing");
+
+        Response.Headers.Add("WWW-Authenticate", "Basic");
 
         var authHeaderRegex = new Regex(@"Basic (.*)");
         if (authHeaderRegex.IsMatch(authorizationHeader) == false)
@@ -39,20 +38,20 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var authSplit = authBase64.Split(Convert.ToChar(":"), 2);
         var authEmail = authSplit[0];
         var authPassword = authSplit.Length > 1 ? authSplit[1] : throw new Exception("Unable to get password");
-
+        
         var account = await _accountService.AuthenticateAsync(authEmail, authPassword);
         if (account == null) return AuthenticateResult.Fail("The username or password is not correct.");
-
+        
         var authenticatedUser = new AuthenticatedUser("BasicAuthentication", true, account.FirstName);
         var claims = new List<Claim>
         {
-            new("FirstName", account.FirstName),
-            new("LastName", account.LastName),
-            new("Email", account.Email),
-            new("UserId", account.Id.ToString())
+        new("FirstName", account.FirstName),
+        new("LastName", account.LastName),
+        new("Email", account.Email),
+        new("UserId", account.Id.ToString())
         };
         var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(authenticatedUser, claims));
-
+        // return AuthenticateResult.Fail("tt");
         return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));
     }
 }
