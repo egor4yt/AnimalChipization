@@ -3,6 +3,7 @@ using System;
 using AnimalChipization.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AnimalChipization.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230218092507_AddedAnimals")]
+    partial class AddedAnimals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,16 +65,13 @@ namespace AnimalChipization.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("ChipperId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("ChippingDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DeathDateTime")
+                    b.Property<DateTime>("DeathDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Gender")
@@ -92,8 +92,6 @@ namespace AnimalChipization.Data.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChipperId");
 
                     b.ToTable("Animals");
                 });
@@ -118,26 +116,6 @@ namespace AnimalChipization.Data.Migrations
                     b.ToTable("AnimalsTypes");
                 });
 
-            modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalTypeAnimal", b =>
-                {
-                    b.Property<long>("AnimalId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("AnimalTypeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("AnimalId", "AnimalTypeId");
-
-                    b.HasIndex("AnimalTypeId");
-
-                    b.ToTable("AnimalTypesAnimals");
-                });
-
             modelBuilder.Entity("AnimalChipization.Data.Entities.Location", b =>
                 {
                     b.Property<long>("Id")
@@ -158,51 +136,6 @@ namespace AnimalChipization.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("AnimalChipization.Data.Entities.Animal", b =>
-                {
-                    b.HasOne("AnimalChipization.Data.Entities.Account", "Account")
-                        .WithMany("Animals")
-                        .HasForeignKey("ChipperId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalTypeAnimal", b =>
-                {
-                    b.HasOne("AnimalChipization.Data.Entities.Animal", "Animal")
-                        .WithMany("AnimalTypesAnimals")
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AnimalChipization.Data.Entities.AnimalType", "AnimalType")
-                        .WithMany("AnimalTypesAnimals")
-                        .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("AnimalType");
-                });
-
-            modelBuilder.Entity("AnimalChipization.Data.Entities.Account", b =>
-                {
-                    b.Navigation("Animals");
-                });
-
-            modelBuilder.Entity("AnimalChipization.Data.Entities.Animal", b =>
-                {
-                    b.Navigation("AnimalTypesAnimals");
-                });
-
-            modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalType", b =>
-                {
-                    b.Navigation("AnimalTypesAnimals");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,4 +11,5 @@ public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match);
     Task InsertAsync(TEntity entity);
     Task<TEntity> UpdateAsync(TEntity entityToUpdate);
+    Task<List<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match);
 }

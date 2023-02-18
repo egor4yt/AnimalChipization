@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
+using AnimalChipization.Core.Validation;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Services.Models.AnimalType;
 using AnimalChipization.Services.Services.Interfaces;
@@ -25,7 +25,7 @@ public class AnimalsTypesController : ApiControllerBase
     [ProducesResponseType(typeof(GetByIdAnimalsTypesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetById([FromRoute] [Range(1, long.MaxValue)] long animalTypeId)
+    public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
         try
         {
@@ -63,10 +63,10 @@ public class AnimalsTypesController : ApiControllerBase
 
     [HttpPut("{animalTypeId:int}")]
     [ProducesResponseType(typeof(UpdateAnimalsTypesResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Update([FromRoute] [Range(1, long.MaxValue)] long animalTypeId, [FromBody] UpdateAnimalsTypesRequest request)
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long animalTypeId, [FromBody] UpdateAnimalsTypesRequest request)
     {
         try
         {

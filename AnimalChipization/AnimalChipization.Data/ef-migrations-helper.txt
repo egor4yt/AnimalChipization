@@ -1,3 +1,5 @@
 dotnet ef migrations add NAME --project AnimalChipization.Data --startup-project AnimalChipization.Api
 
+dotnet ef migrations add AddedDefaultValuesToAnimalTypesAnimals --project AnimalChipization.Data --startup-project AnimalChipization.Api
+
 dotnet ef database update --project AnimalChipization.Data --startup-project AnimalChipization.Api

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data.Entities;
 
-[Index("Email", IsUnique = true)]
 public class Account : EntityBase
 {
     public int Id { get; set; }
@@ -24,4 +23,6 @@ public class Account : EntityBase
     [Required]
     [Column(TypeName = "varchar(64)")]
     public string PasswordHash { get; set; }
+
+    public ICollection<Animal> Animals { get; set; }
 }

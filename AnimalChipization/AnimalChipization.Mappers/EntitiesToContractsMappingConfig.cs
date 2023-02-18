@@ -1,6 +1,8 @@
+using System.Globalization;
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
+using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
@@ -39,6 +41,17 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<AnimalType, CreateAnimalsTypesResponse>();
         CreateMap<AnimalType, GetByIdAnimalsTypesResponse>();
         CreateMap<AnimalType, UpdateAnimalsTypesResponse>();
+
+        #endregion
+
+        #region Animals
+
+        CreateMap<Animal, CreateAnimalsResponse>()
+            .ForMember(x => x.AnimalTypesIds, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
+            .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
+            .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)));
 
         #endregion
     }

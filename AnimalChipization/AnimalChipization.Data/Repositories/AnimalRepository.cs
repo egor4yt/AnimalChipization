@@ -3,9 +3,9 @@ using AnimalChipization.Data.Repositories.Interfaces;
 
 namespace AnimalChipization.Data.Repositories;
 
-public class LocationRepository : RepositoryBase<Location>, ILocationRepository
+public class AnimalRepository : RepositoryBase<Animal>, IAnimalRepository
 {
-    public LocationRepository(ApplicationDbContext context) : base(context)
+    public AnimalRepository(ApplicationDbContext context) : base(context)
     {
     }
 

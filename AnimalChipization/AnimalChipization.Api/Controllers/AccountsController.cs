@@ -3,6 +3,7 @@ using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
 using AnimalChipization.Core.Extensions;
+using AnimalChipization.Core.Validation;
 using AnimalChipization.Services.Models.Account;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -26,7 +27,7 @@ public class AccountsController : ApiControllerBase
     [ProducesResponseType(typeof(GetByIdAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetById([FromRoute] [Range(1, int.MaxValue)] int accountId)
+    public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0)] int accountId)
     {
         try
         {
@@ -64,7 +65,7 @@ public class AccountsController : ApiControllerBase
     [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Update([FromRoute] [Range(1, int.MaxValue)] int accountId, [FromBody] UpdateAccountsRequest request)
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0)] int accountId, [FromBody] UpdateAccountsRequest request)
     {
         try
         {
