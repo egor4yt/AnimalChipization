@@ -1,4 +1,4 @@
-using AnimalChipization.Api.Contracts.AnimalsTypes.Post;
+using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Core.Helpers;
@@ -29,7 +29,7 @@ public class ContractsToEntitiesMappingConfig : Profile
 
         #region AnimalsTypes
 
-        CreateMap<PostAnimalsTypesRequest, AnimalType>();
+        CreateMap<CreateAnimalsTypesRequest, AnimalType>();
 
         #endregion
     }

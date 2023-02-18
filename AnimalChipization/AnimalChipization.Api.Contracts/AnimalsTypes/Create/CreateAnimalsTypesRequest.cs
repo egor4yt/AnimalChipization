@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AnimalChipization.Api.Contracts.AnimalsTypes.Post;
+namespace AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 
-public class PostAnimalsTypesRequest
+public class CreateAnimalsTypesRequest
 {
     [Required]
     public string Type { get; set; }
