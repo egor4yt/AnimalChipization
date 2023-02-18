@@ -1,6 +1,6 @@
 namespace AnimalChipization.Api.Contracts.Accounts.Search;
 
-public class SearchAccountsResponse
+public class SearchAccountsResponseItem
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

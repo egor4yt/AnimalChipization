@@ -1,5 +1,6 @@
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.GetById;
+using AnimalChipization.Api.Contracts.Animals.Search;
 using AnimalChipization.Core.Validation;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Services.Interfaces;
@@ -31,6 +32,24 @@ public class AnimalsController : ApiControllerBase
             if (animal is null) return NotFound($"Animal with id {animalId} not found");
 
             var response = Mapper.Map<GetByIdAnimalsResponse>(animal);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpGet("search")]
+    [ProducesResponseType(typeof(IEnumerable<SearchAnimalsResponseItem>), StatusCodes.Status200OK)]
+    [Authorize("AllowAnonymous")]
+    public async Task<IActionResult> Search([FromQuery] SearchAnimalsRequests request)
+    {
+        try
+        {
+            var searchModel = Mapper.Map<SearchAnimalModel>(request);
+            var accounts = await _animalService.SearchAsync(searchModel);
+            var response = Mapper.Map<IEnumerable<SearchAnimalsResponseItem>>(accounts);
             return Ok(response);
         }
         catch (Exception e)

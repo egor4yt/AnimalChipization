@@ -31,6 +31,6 @@ public class CreateAnimalsRequest
     [GreaterThan(0L)]
     public long ChippingLocationId { get; set; }
 
-    [Gender]
+    [Gender(false)]
     public string Gender { get; set; }
 }

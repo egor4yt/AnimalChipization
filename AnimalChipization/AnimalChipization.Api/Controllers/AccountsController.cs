@@ -43,7 +43,7 @@ public class AccountsController : ApiControllerBase
     }
 
     [HttpGet("search")]
-    [ProducesResponseType(typeof(IEnumerable<SearchAccountsResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<SearchAccountsResponseItem>), StatusCodes.Status200OK)]
     [Authorize("AllowAnonymous")]
     public async Task<IActionResult> Search([FromQuery] SearchAccountsRequests request)
     {
@@ -51,7 +51,7 @@ public class AccountsController : ApiControllerBase
         {
             var searchModel = Mapper.Map<SearchAccountModel>(request);
             var accounts = await _accountService.SearchAsync(searchModel);
-            var response = Mapper.Map<IEnumerable<SearchAccountsResponse>>(accounts);
+            var response = Mapper.Map<IEnumerable<SearchAccountsResponseItem>>(accounts);
             return Ok(response);
         }
         catch (Exception e)

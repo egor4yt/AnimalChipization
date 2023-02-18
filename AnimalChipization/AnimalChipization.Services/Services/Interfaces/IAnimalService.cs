@@ -7,4 +7,5 @@ public interface IAnimalService
 {
     Task<Animal?> GetByIdAsync(long animalId);
     Task<Animal> CreateAsync(CreateAnimalModel model);
+    Task<IEnumerable<Animal>> SearchAsync(SearchAnimalModel model);
 }

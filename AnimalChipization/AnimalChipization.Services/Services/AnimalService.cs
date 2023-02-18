@@ -5,6 +5,7 @@ using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Services.Services;
 
@@ -57,5 +58,24 @@ public class AnimalService : IAnimalService
 
         await _animalRepository.InsertAsync(newAnimal);
         return newAnimal;
+    }
+
+    public async Task<IEnumerable<Animal>> SearchAsync(SearchAnimalModel model)
+    {
+        var animals = _animalRepository.AsQueryable();
+
+        if (string.IsNullOrWhiteSpace(model.Gender) == false) animals = animals.Where(x => x.Gender == model.Gender);
+        if (string.IsNullOrWhiteSpace(model.LifeStatus) == false) animals = animals.Where(x => x.LifeStatus == model.LifeStatus);
+        if (model.ChipperId is not null) animals = animals.Where(x => x.ChipperId == model.ChipperId);
+        if (model.ChippingLocationId is not null) animals = animals.Where(x => x.ChippingLocationId == model.ChippingLocationId);
+        if (model.StartDateTime is not null) animals = animals.Where(x => x.ChippingDateTime >= model.StartDateTime);
+        if (model.EndDateTime is not null) animals = animals.Where(x => x.ChippingDateTime <= model.EndDateTime);
+
+        return await animals
+            .OrderBy(x => x.Id)
+            .Skip(model.From)
+            .Take(model.Size)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
