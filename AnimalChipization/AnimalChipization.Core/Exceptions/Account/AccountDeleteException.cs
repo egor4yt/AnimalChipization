@@ -2,7 +2,7 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions.Account;
 
-public class AccountDeleteException: Exception, IApiException
+public class AccountDeleteException : Exception, IApiException
 {
     public AccountDeleteException(string apiMessage, HttpStatusCode httpStatusCode)
     {

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using AnimalChipization.Api.Contracts.Paging;
 
 namespace AnimalChipization.Api.Contracts.Accounts.Search;

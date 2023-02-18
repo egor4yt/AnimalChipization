@@ -24,7 +24,7 @@ public class ApplicationDbContext : DbContext
             .HasOne(animal => animal.Account)
             .WithMany(account => account.Animals)
             .HasForeignKey(animal => animal.ChipperId);
-        
+
         builder.Entity<Animal>()
             .HasOne(animal => animal.ChippingLocation)
             .WithMany(location => location.Animals)

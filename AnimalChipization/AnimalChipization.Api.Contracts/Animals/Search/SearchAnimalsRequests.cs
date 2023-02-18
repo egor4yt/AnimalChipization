@@ -9,7 +9,7 @@ public class SearchAnimalsRequests : PagingSettings
     public DateTime? EndDateTime { get; set; }
     public int? ChipperId { get; set; }
     public long? ChippingLocationId { get; set; }
-    
+
     [LifeStatus(true)]
     public string? LifeStatus { get; set; }
 

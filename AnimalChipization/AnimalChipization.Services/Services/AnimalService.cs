@@ -82,7 +82,7 @@ public class AnimalService : IAnimalService
     {
         var animal = await _animalRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (animal == null) throw new AnimalUpdateException($"Animal with id {model.Id} does not exists", HttpStatusCode.NotFound);
-        
+
         var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
         if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
 
@@ -90,7 +90,7 @@ public class AnimalService : IAnimalService
         if (locationExists == false) throw new AnimalCrateException($"Location with id {model.ChippingLocationId} does not exists", HttpStatusCode.NotFound);
 
         // todo: validate new chipping location must be not equal first chipping location
-        
+
         animal.ChipperId = model.ChipperId;
         animal.ChippingLocationId = model.ChippingLocationId;
         animal.Gender = model.Gender;
@@ -107,8 +107,8 @@ public class AnimalService : IAnimalService
         var animal = await _animalRepository.FirstOrDefaultWithAnimalsTypesAsync(x => x.Id == animalId);
         if (animal == null) throw new AnimalAttachAnimalTypeException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
 
-        if (animal.AnimalTypes.Any(x=>x.Id == animalTypeId))  throw new AnimalAttachAnimalTypeException($"Animal with id {animalId} already has type with id {animalTypeId}", HttpStatusCode.Conflict);
-        
+        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId)) throw new AnimalAttachAnimalTypeException($"Animal with id {animalId} already has type with id {animalTypeId}", HttpStatusCode.Conflict);
+
         var animalType = await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
         if (animalType == null) throw new AnimalAttachAnimalTypeException($"Animal type with id {animalTypeId} does not exists", HttpStatusCode.NotFound);
 

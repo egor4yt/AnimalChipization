@@ -100,7 +100,7 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPost("{animalId:long}/types/{animalTypeId:long}")]
     [ProducesResponseType(typeof(CreateAnimalsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

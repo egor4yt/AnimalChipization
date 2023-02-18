@@ -82,7 +82,7 @@ public class AccountService : IAccountService
         var account = await _accountRepository.FirstOrDefaultWithAnimalsAsync(x => x.Id == accountId);
         if (account is null) throw new AccountDeleteException($"Account with id {accountId} does not exists", HttpStatusCode.Forbidden);
         if (account.Animals.Any()) throw new AccountDeleteException($"Account with id {accountId} has relations with animals", HttpStatusCode.BadRequest);
-        
+
         await _accountRepository.DeleteAsync(account);
     }
 }

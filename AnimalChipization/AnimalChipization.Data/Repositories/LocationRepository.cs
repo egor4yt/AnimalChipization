@@ -13,6 +13,6 @@ public class LocationRepository : RepositoryBase<Location>, ILocationRepository
 
     public async Task<Location?> FirstOrDefaultWithAnimalsAsync(Expression<Func<Location, bool>> match)
     {
-        return await DbSet.Include(x=>x.Animals).FirstOrDefaultAsync(match);
+        return await DbSet.Include(x => x.Animals).FirstOrDefaultAsync(match);
     }
 }

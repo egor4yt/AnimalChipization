@@ -13,6 +13,6 @@ public class AccountRepository : RepositoryBase<Account>, IAccountRepository
 
     public async Task<Account?> FirstOrDefaultWithAnimalsAsync(Expression<Func<Account, bool>> match)
     {
-        return await DbSet.Include(x=>x.Animals).FirstOrDefaultAsync(match);
+        return await DbSet.Include(x => x.Animals).FirstOrDefaultAsync(match);
     }
 }

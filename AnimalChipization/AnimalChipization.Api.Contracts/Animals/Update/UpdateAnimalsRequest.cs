@@ -27,6 +27,7 @@ public class UpdateAnimalsRequest
 
     [Gender(false)]
     public string Gender { get; set; }
+
     [LifeStatus(false)]
     public string LifeStatus { get; set; }
 }

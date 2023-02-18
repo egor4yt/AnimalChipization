@@ -83,7 +83,7 @@ public class LocationsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpDelete("{pointId:long}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

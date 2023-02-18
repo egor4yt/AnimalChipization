@@ -82,7 +82,7 @@ public class AnimalsTypesController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpDelete("{animalTypeId:long}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
