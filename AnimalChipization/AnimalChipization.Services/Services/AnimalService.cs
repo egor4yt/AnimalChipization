@@ -115,4 +115,19 @@ public class AnimalService : IAnimalService
         animal.AnimalTypes.Add(animalType);
         return await _animalRepository.UpdateAsync(animal);
     }
+
+    public async Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId)
+    {
+        var animal = await _animalRepository.FirstOrDefaultWithAnimalsTypesAsync(x => x.Id == animalId);
+        if (animal == null) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+
+        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId) == false) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} already has type with id {animalTypeId}", HttpStatusCode.NotFound);
+        if (animal.AnimalTypes.Count == 1) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} has only one type", HttpStatusCode.BadRequest);
+
+        var animalType = await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
+        if (animalType == null) throw new AnimalDeleteAnimalTypeException($"Animal type with id {animalTypeId} does not exists", HttpStatusCode.NotFound);
+
+        animal.AnimalTypes.RemoveAll(x => x.Id == animalType.Id);
+        return await _animalRepository.UpdateAsync(animal);
+    }
 }

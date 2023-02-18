@@ -10,4 +10,6 @@ public interface IAnimalService
     Task<IEnumerable<Animal>> SearchAsync(SearchAnimalModel model);
     Task<Animal> UpdateAsync(UpdateAnimalModel model);
     Task<Animal> AttachAnimalTypeAsync(long animalId, long animalTypeId);
+    // Task<Animal> ChangeAnimalTypeAsync();
+    Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId);
 }

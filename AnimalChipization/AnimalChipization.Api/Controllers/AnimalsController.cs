@@ -1,5 +1,6 @@
 using AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
 using AnimalChipization.Api.Contracts.Animals.Create;
+using AnimalChipization.Api.Contracts.Animals.DeleteAnimalType;
 using AnimalChipization.Api.Contracts.Animals.GetById;
 using AnimalChipization.Api.Contracts.Animals.Search;
 using AnimalChipization.Api.Contracts.Animals.Update;
@@ -84,7 +85,7 @@ public class AnimalsController : ApiControllerBase
     [ProducesResponseType(typeof(UpdateAnimalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0)] long animalId, [FromBody] UpdateAnimalsRequest request)
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long animalId, [FromBody] UpdateAnimalsRequest request)
     {
         try
         {
@@ -102,17 +103,35 @@ public class AnimalsController : ApiControllerBase
     }
 
     [HttpPost("{animalId:long}/types/{animalTypeId:long}")]
-    [ProducesResponseType(typeof(CreateAnimalsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AttachAnimalTypeAnimalsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> AttachAnimalType([FromRoute] long animalId, [FromRoute] long animalTypeId)
+    public async Task<IActionResult> AttachAnimalType([FromRoute] [GreaterThan(0L)] long animalId, [FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
         try
         {
             var animal = await _animalService.AttachAnimalTypeAsync(animalId, animalTypeId);
             var response = Mapper.Map<AttachAnimalTypeAnimalsResponse>(animal);
             return Created($"/animals/{animalId}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+
+    [HttpDelete("{animalId:long}/types/{animalTypeId:long}")]
+    [ProducesResponseType(typeof(DeleteAnimalTypeAnimalsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> DeleteAnimalType([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long animalTypeId)
+    {
+        try
+        {
+            var animal = await _animalService.DeleteAnimalTypeAsync(animalId, animalTypeId);
+            var response = Mapper.Map<DeleteAnimalTypeAnimalsResponse>(animal);
+            return Ok(response);
         }
         catch (Exception e)
         {
