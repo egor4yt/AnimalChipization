@@ -23,5 +23,5 @@ public class Account : EntityBase
     [Column(TypeName = "varchar(64)")]
     public string PasswordHash { get; set; }
 
-    public ICollection<Animal> Animals { get; set; }
+    public List<Animal> Animals { get; set; }
 }

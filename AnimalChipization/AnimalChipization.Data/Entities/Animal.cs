@@ -25,6 +25,11 @@ public class Animal : EntityBase
     public DateTime ChippingDateTime { get; set; }
 
     public DateTime? DeathDateTime { get; set; }
+    
+    [Required]
+    public long ChippingLocationId { get; set; }
+
+    public virtual Location ChippingLocation { get; set; }
 
     [Required]
     public int ChipperId { get; set; }

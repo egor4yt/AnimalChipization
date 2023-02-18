@@ -13,12 +13,14 @@ public class AnimalService : IAnimalService
     private readonly IAccountRepository _accountRepository;
     private readonly IAnimalRepository _animalRepository;
     private readonly IAnimalTypeRepository _animalTypeRepository;
+    private readonly ILocationRepository _locationRepository;
 
-    public AnimalService(IAnimalTypeRepository animalTypeRepository, IAnimalRepository animalRepository, IAccountRepository accountRepository)
+    public AnimalService(IAnimalTypeRepository animalTypeRepository, IAnimalRepository animalRepository, IAccountRepository accountRepository, ILocationRepository locationRepository)
     {
         _animalTypeRepository = animalTypeRepository;
         _animalRepository = animalRepository;
         _accountRepository = accountRepository;
+        _locationRepository = locationRepository;
     }
 
     public async Task<Animal> CreateAsync(CreateAnimalModel model)
@@ -29,9 +31,9 @@ public class AnimalService : IAnimalService
         var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
         if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
 
-        // todo: check if there is chipping location
-        // var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
-        // if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
+        // check if there is chipping location
+        var locationExists = await _locationRepository.ExistsAsync(x => x.Id == model.ChippingLocationId);
+        if (locationExists == false) throw new AnimalCrateException($"Location with id {model.ChippingLocationId} does not exists", HttpStatusCode.NotFound);
 
         var newAnimal = new Animal
         {
@@ -42,6 +44,7 @@ public class AnimalService : IAnimalService
             LifeStatus = LifeStatus.Alive,
             ChippingDateTime = DateTime.UtcNow,
             ChipperId = model.ChipperId,
+            ChippingLocationId = model.ChippingLocationId,
             DeathDateTime = null,
             AnimalTypes = new List<AnimalType>()
         };
