@@ -49,4 +49,13 @@ public class AnimalTypeService : IAnimalTypeService
 
         return await _animalTypeRepository.UpdateAsync(animalType);
     }
+
+    public async Task DeleteAsync(long animalTypeId)
+    {
+        var animalType = await _animalTypeRepository.FirstOrDefaultWithAnimalsAsync(x => x.Id == animalTypeId);
+        if (animalType is null) throw new AnimalTypeDeleteException($"Animal type with id {animalTypeId} does not exists", HttpStatusCode.NotFound);
+        if (animalType.Animals.Any()) throw new AnimalTypeDeleteException($"Animal type with id {animalTypeId} has relations with animals", HttpStatusCode.BadRequest);
+
+        await _animalTypeRepository.DeleteAsync(animalType);
+    }
 }
