@@ -1,4 +1,3 @@
-using System.Globalization;
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
@@ -50,8 +49,7 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.AnimalTypesIds, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
-            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
 
         #endregion
     }

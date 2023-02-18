@@ -25,12 +25,12 @@ public class Animal : EntityBase
     public DateTime ChippingDateTime { get; set; }
 
     public DateTime? DeathDateTime { get; set; }
-    
+
     [Required]
     public int ChipperId { get; set; }
-    
+
     public virtual Account Account { get; set; }
-    
+
     public virtual List<AnimalType> AnimalTypes { get; set; }
     public virtual List<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
 

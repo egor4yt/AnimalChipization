@@ -12,12 +12,12 @@ public class GreaterThanAttribute : ValidationAttribute
         _targetValue = targetValue;
     }
 
-    public GreaterThanAttribute(int targetValue): base($"Must be more than {targetValue}")
+    public GreaterThanAttribute(int targetValue) : base($"Must be more than {targetValue}")
     {
         _targetValue = targetValue;
     }
-    
-    public GreaterThanAttribute(long targetValue): base($"Must be more than {targetValue}")
+
+    public GreaterThanAttribute(long targetValue) : base($"Must be more than {targetValue}")
     {
         _targetValue = targetValue;
     }

@@ -14,5 +14,4 @@ public class CreateAnimalsResponse
     public long ChippingLocationId { get; set; }
     public List<long> VisitedLocations { get; set; }
     public DateTime? DeathDateTime { get; set; }
-
 }

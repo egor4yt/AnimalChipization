@@ -1,5 +1,4 @@
 using System.Net;
-using System.Runtime.InteropServices.ComTypes;
 using AnimalChipization.Core.Exceptions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,19 +23,12 @@ public abstract class ApiControllerBase : ControllerBase
 
     protected IActionResult ExceptionResult(Exception exception)
     {
-
         if (exception is AggregateException aggregateException)
-        {
             foreach (var innerException in aggregateException.InnerExceptions)
-            {
                 Logger.LogError(innerException.Message, innerException);
-            }
-        }
         else
-        {
             Logger.LogError(exception.Message, exception);
-        }
-        
+
         return exception switch
         {
             IApiException apiException => StatusCode((int)apiException.HttpStatusCode, apiException.ApiMessage),

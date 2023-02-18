@@ -1,4 +1,3 @@
-using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Registration.Post;

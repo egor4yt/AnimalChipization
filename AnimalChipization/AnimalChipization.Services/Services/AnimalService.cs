@@ -29,6 +29,10 @@ public class AnimalService : IAnimalService
         var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
         if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
 
+        // todo: check if there is chipping location
+        // var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
+        // if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
+
         var newAnimal = new Animal
         {
             WeightKilograms = model.Weight,
@@ -42,13 +46,8 @@ public class AnimalService : IAnimalService
             AnimalTypes = new List<AnimalType>()
         };
         newAnimal.AnimalTypes.AddRange(animalsTypes);
-        
-        await _animalRepository.InsertAsync(newAnimal);
-        
-        return newAnimal;
-        // todo: check if there is chipping location
-        // var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
-        // if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
 
+        await _animalRepository.InsertAsync(newAnimal);
+        return newAnimal;
     }
 }

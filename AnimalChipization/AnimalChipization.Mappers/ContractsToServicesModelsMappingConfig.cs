@@ -27,14 +27,14 @@ public class ContractsToServicesModelsMappingConfig : Profile
         CreateMap<UpdateLocationsRequest, UpdateLocationModel>();
 
         #endregion
-        
+
         #region AnimalsTypes
 
         CreateMap<UpdateAnimalsTypesRequest, UpdateAnimalTypeModel>();
 
         #endregion
-        
-        
+
+
         #region Animals
 
         CreateMap<CreateAnimalsRequest, CreateAnimalModel>();

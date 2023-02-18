@@ -62,7 +62,7 @@ public class AccountService : IAccountService
     public async Task<Account> UpdateAsync(UpdateAccountModel model)
     {
         model.Email = model.Email.ToLower().Trim();
-        
+
         var account = await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (account == null) throw new AccountUpdateException($"Account with id {model.Id} does not exists", HttpStatusCode.Forbidden);
 

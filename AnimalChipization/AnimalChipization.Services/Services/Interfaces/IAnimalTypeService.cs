@@ -9,5 +9,4 @@ public interface IAnimalTypeService
 
     Task CreateAsync(AnimalType animalType);
     Task<AnimalType?> UpdateAsync(UpdateAnimalTypeModel model);
-    
 }

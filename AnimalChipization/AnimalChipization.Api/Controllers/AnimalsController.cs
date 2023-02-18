@@ -1,5 +1,4 @@
 using AnimalChipization.Api.Contracts.Animals.Create;
-using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;

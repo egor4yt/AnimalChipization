@@ -10,7 +10,7 @@ public class AnimalType : EntityBase
     [Required]
     [Column(TypeName = "varchar(128)")]
     public string Type { get; set; }
-    
+
     public virtual List<Animal> Animals { get; set; }
     public virtual List<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
 }
