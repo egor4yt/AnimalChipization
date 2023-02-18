@@ -21,7 +21,7 @@ public class AnimalsTypesController : ApiControllerBase
         _animalTypeService = animalTypeService;
     }
 
-    [HttpGet("{animalTypeId:int}")]
+    [HttpGet("{animalTypeId:long}")]
     [ProducesResponseType(typeof(GetByIdAnimalsTypesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
@@ -61,7 +61,7 @@ public class AnimalsTypesController : ApiControllerBase
         }
     }
 
-    [HttpPut("{animalTypeId:int}")]
+    [HttpPut("{animalTypeId:long}")]
     [ProducesResponseType(typeof(UpdateAnimalsTypesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

@@ -19,6 +19,7 @@ public class AnimalsController : ApiControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(CreateAnimalsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [Authorize("AllowAnonymous")]
     // [Authorize("RequireAuthenticated")]

@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data.Repositories;
 
@@ -9,5 +11,8 @@ public class LocationRepository : RepositoryBase<Location>, ILocationRepository
     {
     }
 
-    // Can bee extended by any additional methods that do not present in RepositoryBase
+    public async Task<Location?> FirstOrDefaultWithAnimalsAsync(Expression<Func<Location, bool>> match)
+    {
+        return await DbSet.Include(x=>x.Animals).FirstOrDefaultAsync(match);
+    }
 }

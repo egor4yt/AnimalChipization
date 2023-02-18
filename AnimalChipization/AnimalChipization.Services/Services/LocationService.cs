@@ -50,4 +50,13 @@ public class LocationService : ILocationService
 
         return await _locationRepository.UpdateAsync(location);
     }
+
+    public async Task DeleteAsync(long pointId)
+    {
+        var location = await _locationRepository.FirstOrDefaultWithAnimalsAsync(x => x.Id == pointId);
+        if (location is null) throw new LocationDeleteException($"Location with id {pointId} does not exists", HttpStatusCode.NotFound);
+        if (location.Animals.Any()) throw new LocationDeleteException($"Location with id {pointId} has relations with animals", HttpStatusCode.BadRequest);
+        
+        await _locationRepository.DeleteAsync(location);
+    }
 }

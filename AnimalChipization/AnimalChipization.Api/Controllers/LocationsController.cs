@@ -22,7 +22,7 @@ public class LocationsController : ApiControllerBase
         _locationService = locationService;
     }
 
-    [HttpGet("{pointId:int}")]
+    [HttpGet("{pointId:long}")]
     [ProducesResponseType(typeof(GetByIdLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
@@ -62,7 +62,7 @@ public class LocationsController : ApiControllerBase
         }
     }
 
-    [HttpPut("{pointId:int}")]
+    [HttpPut("{pointId:long}")]
     [ProducesResponseType(typeof(UpdateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -77,6 +77,23 @@ public class LocationsController : ApiControllerBase
             var location = await _locationService.UpdateAsync(updateModel);
             var response = Mapper.Map<UpdateLocationsResponse>(location);
             return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpDelete("{pointId:long}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0)] long pointId)
+    {
+        try
+        {
+            await _locationService.DeleteAsync(pointId);
+            return Ok();
         }
         catch (Exception e)
         {
