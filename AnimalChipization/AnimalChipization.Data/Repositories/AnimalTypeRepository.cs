@@ -11,6 +11,6 @@ public class AnimalTypeRepository : RepositoryBase<AnimalType>, IAnimalTypeRepos
     {
         _context = context;
     }
-    
+
     // Can bee extended by any additional methods that do not present in RepositoryBase
 }

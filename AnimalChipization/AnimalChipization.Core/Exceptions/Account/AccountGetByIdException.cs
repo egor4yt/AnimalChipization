@@ -2,7 +2,7 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions.Account;
 
-public class AccountGetByIdException :Exception, IApiException
+public class AccountGetByIdException : Exception, IApiException
 {
     public AccountGetByIdException(string apiMessage, HttpStatusCode httpStatusCode)
     {

@@ -12,18 +12,17 @@ public class ContractsToServicesModelsMappingConfig : Profile
     public ContractsToServicesModelsMappingConfig()
     {
         #region Accounts
-        
+
         CreateMap<SearchAccountsRequests, SearchAccountModel>();
         CreateMap<UpdateAccountsRequest, UpdateAccountModel>()
-            .ForMember(x=>x.Email, opt=>opt.MapFrom(p=>p.Email.ToLower().Trim()));
-        
+            .ForMember(x => x.Email, opt => opt.MapFrom(p => p.Email.ToLower().Trim()));
+
         #endregion
-        
+
         #region Locations
-        
+
         CreateMap<UpdateLocationsRequest, UpdateLocationModel>();
-        
+
         #endregion
-        
     }
 }

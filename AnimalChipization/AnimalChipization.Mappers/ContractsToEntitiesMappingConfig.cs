@@ -26,7 +26,7 @@ public class ContractsToEntitiesMappingConfig : Profile
         CreateMap<CreateLocationsRequest, Location>();
 
         #endregion
-        
+
         #region AnimalsTypes
 
         CreateMap<PostAnimalsTypesRequest, AnimalType>();

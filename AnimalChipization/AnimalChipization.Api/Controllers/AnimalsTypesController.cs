@@ -1,5 +1,4 @@
 using AnimalChipization.Api.Contracts.AnimalsTypes.Post;
-using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -16,7 +15,7 @@ public class AnimalsTypesController : ApiControllerBase
     {
         _animalTypeService = animalTypeService;
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(PostAnimalsTypesResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]

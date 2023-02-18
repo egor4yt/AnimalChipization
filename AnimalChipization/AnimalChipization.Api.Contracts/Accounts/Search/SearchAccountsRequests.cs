@@ -8,7 +8,9 @@ public class SearchAccountsRequests
     public string? LastName { get; set; }
     public string? Email { get; set; }
 
-    [Range(0, int.MaxValue)] public int From { get; set; } = 0;
+    [Range(0, int.MaxValue)]
+    public int From { get; set; } = 0;
 
-    [Range(1, int.MaxValue)] public int Size { get; set; } = 10;
+    [Range(1, int.MaxValue)]
+    public int Size { get; set; } = 10;
 }

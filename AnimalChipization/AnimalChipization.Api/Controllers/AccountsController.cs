@@ -58,7 +58,7 @@ public class AccountsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -68,10 +68,10 @@ public class AccountsController : ApiControllerBase
         try
         {
             if (int.Parse(HttpContext.User.GetUserId()) != accountId) return Forbid();
-            
+
             var updateModel = Mapper.Map<UpdateAccountModel>(request);
             updateModel.Id = accountId;
-            
+
             var account = await _accountService.UpdateAsync(updateModel);
             var response = Mapper.Map<UpdateAccountsResponse>(account);
             return Ok(response);

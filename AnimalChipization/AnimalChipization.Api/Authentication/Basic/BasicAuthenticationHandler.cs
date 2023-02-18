@@ -38,17 +38,17 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var authSplit = authBase64.Split(Convert.ToChar(":"), 2);
         var authEmail = authSplit[0];
         var authPassword = authSplit.Length > 1 ? authSplit[1] : throw new Exception("Unable to get password");
-        
+
         var account = await _accountService.AuthenticateAsync(authEmail, authPassword);
         if (account == null) return AuthenticateResult.Fail("The username or password is not correct.");
-        
+
         var authenticatedUser = new AuthenticatedUser("BasicAuthentication", true, account.FirstName);
         var claims = new List<Claim>
         {
-        new("FirstName", account.FirstName),
-        new("LastName", account.LastName),
-        new("Email", account.Email),
-        new("UserId", account.Id.ToString())
+            new("FirstName", account.FirstName),
+            new("LastName", account.LastName),
+            new("Email", account.Email),
+            new("UserId", account.Id.ToString())
         };
         var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(authenticatedUser, claims));
         // return AuthenticateResult.Fail("tt");
