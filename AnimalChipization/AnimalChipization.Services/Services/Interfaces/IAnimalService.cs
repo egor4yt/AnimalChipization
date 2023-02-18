@@ -5,5 +5,6 @@ namespace AnimalChipization.Services.Services.Interfaces;
 
 public interface IAnimalService
 {
+    Task<Animal?> GetByIdAsync(long animalId);
     Task<Animal> CreateAsync(CreateAnimalModel model);
 }

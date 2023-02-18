@@ -23,6 +23,11 @@ public class AnimalService : IAnimalService
         _locationRepository = locationRepository;
     }
 
+    public async Task<Animal?> GetByIdAsync(long animalId)
+    {
+        return await _animalRepository.FindFirstOrDefaultAsync(x => x.Id == animalId);
+    }
+
     public async Task<Animal> CreateAsync(CreateAnimalModel model)
     {
         var animalsTypes = await _animalTypeRepository.FindAllAsync(x => model.AnimalTypes.Contains(x.Id));

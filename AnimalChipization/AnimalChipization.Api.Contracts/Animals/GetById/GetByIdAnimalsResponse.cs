@@ -1,6 +1,6 @@
-namespace AnimalChipization.Api.Contracts.Animals.Create;
+namespace AnimalChipization.Api.Contracts.Animals.GetById;
 
-public class CreateAnimalsResponse
+public class GetByIdAnimalsResponse
 {
     public long Id { get; set; }
     public virtual List<long> AnimalTypes { get; set; }
