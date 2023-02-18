@@ -41,7 +41,7 @@ public class LocationsController : ApiControllerBase
         }
     }
 
-    [HttpPost("")]
+    [HttpPost]
     [ProducesResponseType(typeof(CreateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]

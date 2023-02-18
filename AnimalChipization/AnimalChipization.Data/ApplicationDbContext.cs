@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<AnimalType> AnimalType { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

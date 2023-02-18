@@ -5,5 +5,5 @@ namespace AnimalChipization.Core.Exceptions;
 public interface IApiException
 {
     string ApiMessage { get; }
-    public HttpStatusCode HttpStatusCode { get; }
+    HttpStatusCode HttpStatusCode { get; }
 }

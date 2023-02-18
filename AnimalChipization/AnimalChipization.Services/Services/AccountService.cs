@@ -21,10 +21,10 @@ public class AccountService : IAccountService
     public async Task RegisterAsync(Account account)
     {
         if (account == null) throw new AccountRegisterException("Account was null", HttpStatusCode.BadRequest);
-        var accountExist = await _accountRepository.ExistsAsync(x => x.Email == account.Email);
-        if (accountExist)
-            throw new AccountRegisterException($"Account with email {account.Email} already exists",
-                HttpStatusCode.Conflict);
+
+        account.Email = account.Email.ToLower();
+        var accountExist = await _accountRepository.ExistsAsync(x => x.Email.ToLower() == account.Email);
+        if (accountExist) throw new AccountRegisterException($"Account with email {account.Email} already exists", HttpStatusCode.Conflict);
 
         await _accountRepository.InsertAsync(account);
     }
@@ -39,42 +39,40 @@ public class AccountService : IAccountService
     {
         var passwordHash = SecurityHelper.ComputeSha256Hash(password);
         return await _accountRepository.FindFirstOrDefaultAsync(x =>
-            x.Email == email && x.PasswordHash == passwordHash);
+            x.Email.ToLower() == email.ToLower()
+            && x.PasswordHash == passwordHash
+        );
     }
 
     public async Task<IEnumerable<Account>> SearchAsync(SearchAccountModel model)
     {
         var accounts = _accountRepository.AsQueryable();
 
-        if (string.IsNullOrWhiteSpace(model.FirstName) == false)
-            accounts = accounts.Where(x => EF.Functions.Like(x.FirstName.ToLower(), $"%{model.FirstName.ToLower()}%"));
+        if (string.IsNullOrWhiteSpace(model.FirstName) == false) accounts = accounts.Where(x => EF.Functions.Like(x.FirstName.ToLower(), $"%{model.FirstName.ToLower()}%"));
+        if (string.IsNullOrWhiteSpace(model.LastName) == false) accounts = accounts.Where(x => EF.Functions.Like(x.LastName.ToLower(), $"%{model.LastName.ToLower()}%"));
+        if (string.IsNullOrWhiteSpace(model.Email) == false) accounts = accounts.Where(x => EF.Functions.Like(x.Email.ToLower(), $"%{model.Email.ToLower()}%"));
 
-        if (string.IsNullOrWhiteSpace(model.LastName) == false)
-            accounts = accounts.Where(x => EF.Functions.Like(x.LastName.ToLower(), $"%{model.LastName.ToLower()}%"));
-
-        if (string.IsNullOrWhiteSpace(model.Email) == false)
-            accounts = accounts.Where(x => EF.Functions.Like(x.Email.ToLower(), $"%{model.Email.ToLower()}%"));
-
-
-        return await accounts.OrderBy(x => x.Id).Skip(model.From).Take(model.Size).AsNoTracking().ToListAsync();
+        return await accounts
+            .OrderBy(x => x.Id)
+            .Skip(model.From)
+            .Take(model.Size)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<Account> UpdateAsync(UpdateAccountModel model)
     {
         if (model.Id <= 0) throw new AccountRegisterException("Invalid account id", HttpStatusCode.BadRequest);
-        
+
         var account = await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
-        if (account == null)
-            throw new AccountUpdateException($"Account with id {model.Id} does not exists", HttpStatusCode.Forbidden);
-        
-        var accountExist = await _accountRepository.ExistsAsync(x => x.Email == account.Email && x.Id != model.Id);
-        if (accountExist)
-            throw new AccountRegisterException($"Account with email {model.Email} already exists",
-                HttpStatusCode.Conflict);
+        if (account == null) throw new AccountUpdateException($"Account with id {model.Id} does not exists", HttpStatusCode.Forbidden);
+
+        var accountExist = await _accountRepository.ExistsAsync(x => x.Email.ToLower() == account.Email.ToLower() && x.Id != model.Id);
+        if (accountExist) throw new AccountRegisterException($"Account with email {model.Email} already exists", HttpStatusCode.Conflict);
 
         account.FirstName = model.FirstName;
         account.LastName = model.LastName;
-        account.Email = model.Email;
+        account.Email = model.Email.ToLower();
         account.PasswordHash = SecurityHelper.ComputeSha256Hash(model.Password);
 
         return await _accountRepository.UpdateAsync(account);

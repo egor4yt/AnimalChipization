@@ -1,6 +1,7 @@
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
+using AnimalChipization.Api.Contracts.AnimalsTypes.Post;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
@@ -22,12 +23,18 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Account, UpdateAccountsResponse>();
 
         #endregion
-        
+
         #region Location
 
         CreateMap<Location, GetByIdLocationsResponse>();
         CreateMap<Location, CreateLocationsResponse>();
         CreateMap<Location, UpdateLocationsResponse>();
+
+        #endregion
+
+        #region AnimalType
+
+        CreateMap<AnimalType, PostAnimalsTypesResponse>();
 
         #endregion
     }

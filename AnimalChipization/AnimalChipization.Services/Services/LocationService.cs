@@ -1,5 +1,4 @@
 using System.Net;
-using AnimalChipization.Core.Exceptions.Account;
 using AnimalChipization.Core.Exceptions.Location;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
@@ -26,14 +25,12 @@ public class LocationService : ILocationService
     public async Task CreateAsync(Location location)
     {
         if (location == null) throw new LocationCreateException("Location was null", HttpStatusCode.BadRequest);
+
         var locationExists = await _locationRepository.ExistsAsync(x =>
             Math.Abs(x.Longitude - location.Longitude) < 0.0001
             && Math.Abs(x.Latitude - location.Latitude) < 0.0001);
-        if (locationExists)
-            throw new AccountRegisterException(
-                $"Location with longitude: {location.Longitude} and latitude: {location.Latitude} already exists",
-                HttpStatusCode.Conflict);
-        
+        if (locationExists) throw new LocationCreateException($"Location with longitude: {location.Longitude} and latitude: {location.Latitude} already exists", HttpStatusCode.Conflict);
+
         await _locationRepository.InsertAsync(location);
     }
 
@@ -42,17 +39,14 @@ public class LocationService : ILocationService
         if (model.Id <= 0) throw new LocationUpdateException("Invalid location id", HttpStatusCode.BadRequest);
 
         var location = await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
-        if (location == null)
-            throw new LocationUpdateException($"Location with id {model.Id} does not exists", HttpStatusCode.NotFound);
+        if (location == null) throw new LocationUpdateException($"Location with id {model.Id} does not exists", HttpStatusCode.NotFound);
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
             Math.Abs(x.Longitude - model.Longitude) < 0.01
             && Math.Abs(x.Latitude - model.Latitude) < 0.01
-            && x.Id != model.Id);
-        if (locationExists)
-            throw new AccountRegisterException(
-                $"Location with longitude: {model.Longitude} and latitude: {model.Latitude} already exists",
-                HttpStatusCode.Conflict);
+            && x.Id != model.Id
+        );
+        if (locationExists) throw new LocationCreateException($"Location with longitude: {model.Longitude} and latitude: {model.Latitude} already exists", HttpStatusCode.Conflict);
 
         location.Longitude = model.Longitude;
         location.Latitude = model.Latitude;
