@@ -1,6 +1,6 @@
 namespace AnimalChipization.Api.Contracts.Accounts.Update;
 
-public class UpdateAccountsResponse
+public class UpdateAccountsResponseItem
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

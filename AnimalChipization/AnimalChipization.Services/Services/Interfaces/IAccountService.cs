@@ -10,4 +10,5 @@ public interface IAccountService
     Task<Account?> AuthenticateAsync(string email, string password);
     Task<IEnumerable<Account>> SearchAsync(SearchAccountModel model);
     Task<Account> UpdateAsync(UpdateAccountModel model);
+    Task DeleteAsync(int accountId);
 }

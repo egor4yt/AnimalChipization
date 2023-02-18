@@ -61,21 +61,40 @@ public class AccountsController : ApiControllerBase
     }
 
     [HttpPut("{accountId:int}")]
-    [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponseItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0)] int accountId, [FromBody] UpdateAccountsRequest request)
     {
         try
         {
-            if (int.Parse(HttpContext.User.GetUserId()) != accountId) return Forbid();
+            if (HttpContext.User.GetUserId() != accountId) return Forbid();
 
             var updateModel = Mapper.Map<UpdateAccountModel>(request);
             updateModel.Id = accountId;
 
             var account = await _accountService.UpdateAsync(updateModel);
-            var response = Mapper.Map<UpdateAccountsResponse>(account);
+            var response = Mapper.Map<UpdateAccountsResponseItem>(account);
             return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+
+    [HttpDelete("{accountId:int}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0)] int accountId)
+    {
+        try
+        {
+            if (HttpContext.User.GetUserId() != accountId) return Forbid();
+
+            await _accountService.DeleteAsync(accountId);
+            return Ok();
         }
         catch (Exception e)
         {

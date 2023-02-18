@@ -23,7 +23,7 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Account, PostRegistrationResponse>();
         CreateMap<Account, GetByIdAccountsResponse>();
         CreateMap<Account, SearchAccountsResponse>();
-        CreateMap<Account, UpdateAccountsResponse>();
+        CreateMap<Account, UpdateAccountsResponseItem>();
 
         #endregion
 

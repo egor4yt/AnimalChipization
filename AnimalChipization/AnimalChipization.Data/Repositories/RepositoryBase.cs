@@ -21,11 +21,6 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         return DbSet.AsQueryable();
     }
 
-    public virtual async Task<List<TEntity>> GetAllAsync()
-    {
-        return await DbSet.AsNoTracking().ToListAsync();
-    }
-
     public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> match)
     {
         return await DbSet.AsNoTracking().FirstOrDefaultAsync(match);
@@ -57,5 +52,11 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     public async Task<List<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match)
     {
         return await DbSet.Where(match).ToListAsync();
+    }
+
+    public async Task DeleteAsync(TEntity entity)
+    {
+        DbSet.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }
