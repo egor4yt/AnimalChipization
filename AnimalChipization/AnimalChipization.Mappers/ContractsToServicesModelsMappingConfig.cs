@@ -2,6 +2,7 @@ using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.Search;
+using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Services.Models.Account;
@@ -40,6 +41,7 @@ public class ContractsToServicesModelsMappingConfig : Profile
 
         CreateMap<CreateAnimalsRequest, CreateAnimalModel>();
         CreateMap<SearchAnimalsRequests, SearchAnimalModel>();
+        CreateMap<UpdateAnimalsRequest, UpdateAnimalModel>();
 
         #endregion
     }

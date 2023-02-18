@@ -1,6 +1,8 @@
+using AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.GetById;
 using AnimalChipization.Api.Contracts.Animals.Search;
+using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Core.Validation;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Services.Interfaces;
@@ -19,7 +21,7 @@ public class AnimalsController : ApiControllerBase
     {
         _animalService = animalService;
     }
-    
+
     [HttpGet("{animalId:long}")]
     [ProducesResponseType(typeof(GetByIdAnimalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -39,7 +41,7 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpGet("search")]
     [ProducesResponseType(typeof(IEnumerable<SearchAnimalsResponseItem>), StatusCodes.Status200OK)]
     [Authorize("AllowAnonymous")]
@@ -71,6 +73,46 @@ public class AnimalsController : ApiControllerBase
             var animal = await _animalService.CreateAsync(model);
             var response = Mapper.Map<CreateAnimalsResponse>(animal);
             return Created($"/animals/types/{response.Id}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+
+    [HttpPut("{animalId:long}")]
+    [ProducesResponseType(typeof(UpdateAnimalsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0)] long animalId, [FromBody] UpdateAnimalsRequest request)
+    {
+        try
+        {
+            var updateModel = Mapper.Map<UpdateAnimalModel>(request);
+            updateModel.Id = animalId;
+
+            var account = await _animalService.UpdateAsync(updateModel);
+            var response = Mapper.Map<UpdateAnimalsResponse>(account);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpPost("{animalId:long}/types/{animalTypeId:long}")]
+    [ProducesResponseType(typeof(CreateAnimalsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> AttachAnimalType([FromRoute] long animalId, [FromRoute] long animalTypeId)
+    {
+        try
+        {
+            var animal = await _animalService.AttachAnimalTypeAsync(animalId, animalTypeId);
+            var response = Mapper.Map<AttachAnimalTypeAnimalsResponse>(animal);
+            return Created($"/animals/{animalId}", response);
         }
         catch (Exception e)
         {

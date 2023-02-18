@@ -1,6 +1,6 @@
-namespace AnimalChipization.Api.Contracts.Animals.Create;
+namespace AnimalChipization.Api.Contracts.Animals.Update;
 
-public class CreateAnimalsResponse
+public class UpdateAnimalsResponse
 {
     public long Id { get; set; }
     public List<long> AnimalTypes { get; set; }

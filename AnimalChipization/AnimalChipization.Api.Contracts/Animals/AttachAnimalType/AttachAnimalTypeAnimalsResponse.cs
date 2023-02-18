@@ -1,9 +1,9 @@
-namespace AnimalChipization.Api.Contracts.Animals.Create;
+namespace AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
 
-public class CreateAnimalsResponse
+public class AttachAnimalTypeAnimalsResponse
 {
     public long Id { get; set; }
-    public List<long> AnimalTypes { get; set; }
+    public virtual List<long> AnimalTypes { get; set; }
     public float Weight { get; set; }
     public float Height { get; set; }
     public float Length { get; set; }

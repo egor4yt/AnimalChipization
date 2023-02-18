@@ -1,9 +1,11 @@
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
+using AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.GetById;
 using AnimalChipization.Api.Contracts.Animals.Search;
+using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
@@ -65,6 +67,18 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
             .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
         
+        CreateMap<Animal, UpdateAnimalsResponse>()
+            .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
+            .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
+            .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+
+        CreateMap<Animal, AttachAnimalTypeAnimalsResponse>()
+            .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
+            .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
+            .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+
         #endregion
     }
 }
