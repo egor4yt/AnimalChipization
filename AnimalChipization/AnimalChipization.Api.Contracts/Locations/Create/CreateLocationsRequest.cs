@@ -4,9 +4,9 @@ namespace AnimalChipization.Api.Contracts.Locations.Create;
 
 public class CreateLocationsRequest
 {
-    [Range(-180, 180)]
+    [Range(-180f, 180f)]
     public double Longitude { get; set; }
 
-    [Range(-90, 90)]
+    [Range(-90f, 90f)]
     public double Latitude { get; set; }
 }

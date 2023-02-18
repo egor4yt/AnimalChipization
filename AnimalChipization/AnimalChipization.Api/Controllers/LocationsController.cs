@@ -88,7 +88,7 @@ public class LocationsController : ApiControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0)] long pointId)
+    public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long pointId)
     {
         try
         {
