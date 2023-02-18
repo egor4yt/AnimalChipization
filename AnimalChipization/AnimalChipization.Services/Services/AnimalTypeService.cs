@@ -15,6 +15,11 @@ public class AnimalTypeService : IAnimalTypeService
         _animalTypeRepository = animalTypeRepository;
     }
 
+    public async Task<AnimalType?> GetByIdAsync(long animalTypeId)
+    {
+        return await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
+    }
+
     public async Task CreateAsync(AnimalType animalType)
     {
         if (animalType == null) throw new AnimalTypeCreateException("Animal type was null", HttpStatusCode.BadRequest);

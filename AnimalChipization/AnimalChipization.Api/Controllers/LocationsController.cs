@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
@@ -23,9 +24,9 @@ public class LocationsController : ApiControllerBase
 
     [HttpGet("{pointId:int}")]
     [ProducesResponseType(typeof(GetByIdLocationsResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetById([FromRoute] int pointId)
+    public async Task<IActionResult> GetById([FromRoute] [Range(1, long.MaxValue)] long pointId)
     {
         try
         {
@@ -43,7 +44,7 @@ public class LocationsController : ApiControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(CreateLocationsResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Create([FromBody] CreateLocationsRequest request)
     {
@@ -63,10 +64,10 @@ public class LocationsController : ApiControllerBase
 
     [HttpPut("{pointId:int}")]
     [ProducesResponseType(typeof(UpdateLocationsResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Update([FromRoute] int pointId, [FromBody] UpdateLocationsRequest request)
+    public async Task<IActionResult> Update([FromRoute] [Range(1, long.MaxValue)] long pointId, [FromBody] UpdateLocationsRequest request)
     {
         try
         {

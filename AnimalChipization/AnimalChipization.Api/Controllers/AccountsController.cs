@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
@@ -23,9 +24,9 @@ public class AccountsController : ApiControllerBase
 
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(GetByIdAccountsResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
     [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetById([FromRoute] int accountId)
+    public async Task<IActionResult> GetById([FromRoute] [Range(1, int.MaxValue)] int accountId)
     {
         try
         {
@@ -61,9 +62,9 @@ public class AccountsController : ApiControllerBase
 
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> Update([FromRoute] int accountId, [FromBody] UpdateAccountsRequest request)
+    public async Task<IActionResult> Update([FromRoute] [Range(1, int.MaxValue)] int accountId, [FromBody] UpdateAccountsRequest request)
     {
         try
         {

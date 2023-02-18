@@ -16,9 +16,8 @@ public class LocationService : ILocationService
         _locationRepository = locationRepository;
     }
 
-    public async Task<Location?> GetByIdAsync(int locationId)
+    public async Task<Location?> GetByIdAsync(long locationId)
     {
-        if (locationId <= 0) throw new LocationGetByIdException("Invalid location id", HttpStatusCode.BadRequest);
         return await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == locationId);
     }
 
@@ -36,8 +35,6 @@ public class LocationService : ILocationService
 
     public async Task<Location> UpdateAsync(UpdateLocationModel model)
     {
-        if (model.Id <= 0) throw new LocationUpdateException("Invalid location id", HttpStatusCode.BadRequest);
-
         var location = await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (location == null) throw new LocationUpdateException($"Location with id {model.Id} does not exists", HttpStatusCode.NotFound);
 

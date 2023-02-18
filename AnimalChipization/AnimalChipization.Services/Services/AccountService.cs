@@ -31,7 +31,6 @@ public class AccountService : IAccountService
 
     public async Task<Account?> GetByIdAsync(int accountId)
     {
-        if (accountId <= 0) throw new AccountGetByIdException("Invalid account id", HttpStatusCode.BadRequest);
         return await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == accountId);
     }
 
@@ -62,8 +61,6 @@ public class AccountService : IAccountService
 
     public async Task<Account> UpdateAsync(UpdateAccountModel model)
     {
-        if (model.Id <= 0) throw new AccountRegisterException("Invalid account id", HttpStatusCode.BadRequest);
-
         var account = await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (account == null) throw new AccountUpdateException($"Account with id {model.Id} does not exists", HttpStatusCode.Forbidden);
 
