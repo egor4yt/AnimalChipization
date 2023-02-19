@@ -75,7 +75,7 @@ public class AnimalService : IAnimalService
             .Skip(model.From)
             .Take(model.Size)
             .Include(x => x.AnimalTypes)
-            .Include(x=>x.AnimalVisitedLocations)
+            .Include(x => x.AnimalVisitedLocations)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -154,22 +154,4 @@ public class AnimalService : IAnimalService
         animal.AnimalTypes.RemoveAll(x => x.Id == animalType.Id);
         return await _animalRepository.UpdateAsync(animal);
     }
-
-    // public async Task DeleteVisitedLocationAsync(long animalId, long visitedPointId)
-    // {
-    //     var animal = await _animalRepository.FirstOrDefaultWithVisitedLocations(x => x.Id == animalId);
-    //     if (animal == null) throw new AnimalDeleteVisitedLocationException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
-    //
-    //     var visitedLocationExists = animal.AnimalVisitedLocations.Any(x => x.Id == visitedPointId);
-    //     if (visitedLocationExists == false) throw new AnimalDeleteVisitedLocationException($"Animal with id {animalId} does not have visited location with id {visitedPointId}", HttpStatusCode.NotFound);
-    //
-    //
-    //     if (animal.AnimalVisitedLocations.Count >= 2
-    //         && animal.AnimalVisitedLocations[0].Id == visitedPointId 
-    //         && animal.AnimalVisitedLocations[1].LocationId == animal.ChippingLocationId) animal.AnimalVisitedLocations.RemoveAll(x => x.Id == animal.AnimalVisitedLocations[1].Id);
-    //
-    //     animal.AnimalVisitedLocations.RemoveAll(x => x.Id == visitedPointId);
-    //
-    //     await _animalRepository.UpdateAsync(animal);
-    // }
 }

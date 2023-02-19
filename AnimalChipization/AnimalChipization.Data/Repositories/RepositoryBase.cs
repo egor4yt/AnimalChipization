@@ -59,4 +59,10 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         DbSet.Remove(entity);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteRangeAsync(IEnumerable<TEntity> entity)
+    {
+        DbSet.RemoveRange(entity);
+        await _context.SaveChangesAsync();
+    }
 }

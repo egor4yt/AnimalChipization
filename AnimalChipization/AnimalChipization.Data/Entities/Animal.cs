@@ -40,5 +40,5 @@ public class Animal : EntityBase
     public virtual List<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
 
     [Required]
-    public virtual List<AnimalVisitedLocation> AnimalVisitedLocations { get; set; }   
+    public virtual List<AnimalVisitedLocation> AnimalVisitedLocations { get; set; }
 }

@@ -12,4 +12,5 @@ public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     Task<TEntity> UpdateAsync(TEntity entityToUpdate);
     Task<List<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match);
     Task DeleteAsync(TEntity entity);
+    Task DeleteRangeAsync(IEnumerable<TEntity> entity);
 }

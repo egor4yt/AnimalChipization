@@ -44,7 +44,7 @@ public class ContractsToServicesModelsMappingConfig : Profile
         CreateMap<SearchAnimalsRequests, SearchAnimalModel>();
         CreateMap<UpdateAnimalsRequest, UpdateAnimalModel>();
         CreateMap<ChangeAnimalTypeAnimalsRequest, ChangeAnimalTypeAnimalModel>();
-        
+
         #endregion
     }
 }

@@ -161,21 +161,4 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-
-    // [HttpDelete("{animalId:long}/locations/{visitedPointId:long}")]
-    // [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    // [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    // [Authorize("RequireAuthenticated")]
-    // public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
-    // {
-    //     try
-    //     {
-    //         await _animalService.DeleteVisitedLocationAsync(animalId, visitedPointId);
-    //         return Ok();
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return ExceptionResult(e);
-    //     }
-    // }
 }

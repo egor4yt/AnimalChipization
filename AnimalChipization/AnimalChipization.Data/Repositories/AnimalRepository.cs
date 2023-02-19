@@ -16,7 +16,7 @@ public class AnimalRepository : RepositoryBase<Animal>, IAnimalRepository
         return await DbSet
             .Include(l => l
                 .AnimalVisitedLocations.OrderBy(x => x.CreatedAt))
-            .Include(x=>x.AnimalTypes)
+            .Include(x => x.AnimalTypes)
             .FirstOrDefaultAsync(match);
     }
 }

@@ -59,8 +59,8 @@ public class ApplicationDbContext : DbContext
             .HasOne(pt => pt.Animal)
             .WithMany(t => t.AnimalVisitedLocations)
             .HasForeignKey(pt => pt.AnimalId);
-        
-        
+
+
         //
         // builder.Entity<Animal>()
         //     .HasMany(animal => animal.Locations)
