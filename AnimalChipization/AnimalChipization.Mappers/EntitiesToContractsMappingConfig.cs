@@ -11,6 +11,7 @@ using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
+using AnimalChipization.Api.Contracts.AnimalsVisitedLocations;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
@@ -55,45 +56,58 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
         CreateMap<Animal, GetByIdAnimalsResponse>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
         CreateMap<Animal, SearchAnimalsResponseItem>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
         CreateMap<Animal, UpdateAnimalsResponse>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
         CreateMap<Animal, AttachAnimalTypeAnimalsResponse>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
-       
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
+
         CreateMap<Animal, DeleteAnimalTypeAnimalsResponse>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
         CreateMap<Animal, ChangeAnimalTypeAnimalsResponse>()
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
-            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters));
+            .ForMember(x => x.Length, opt => opt.MapFrom(p => p.LengthMeters))
+            .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x=>x.Id)));
 
-        
+        #endregion
+
+        #region AnimalVisitedLocation
+
+        CreateMap<AnimalVisitedLocation, AddAnimalsVisitedLocationsResponse>()
+            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt))
+            .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
+
         #endregion
     }
 }

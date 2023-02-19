@@ -8,21 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AnimalChipization.Api.Contracts\AnimalChipization.Api.Contracts.csproj"/>
-        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj"/>
-        <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj"/>
-        <ProjectReference Include="..\AnimalChipization.Mappers\AnimalChipization.Mappers.csproj"/>
-        <ProjectReference Include="..\AnimalChipization.Services\AnimalChipization.Services.csproj"/>
+        <ProjectReference Include="..\AnimalChipization.Api.Contracts\AnimalChipization.Api.Contracts.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Mappers\AnimalChipization.Mappers.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Services\AnimalChipization.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1"/>
+        <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>

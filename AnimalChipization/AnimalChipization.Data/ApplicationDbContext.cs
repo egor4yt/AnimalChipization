@@ -49,9 +49,6 @@ public class ApplicationDbContext : DbContext
                     entity.HasKey(p => new { p.AnimalId, p.AnimalTypeId });
                 }
             );
-        
-        builder.Entity<AnimalVisitedLocation>()
-            .HasKey(t => new { t.AnimalId, t.LocationId });
 
         builder.Entity<AnimalVisitedLocation>()
             .HasOne(pt => pt.Location)

@@ -1,4 +1,3 @@
-using AnimalChipization.Api.Contracts.Animals.AddVisitedLocationAnimals;
 using AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
 using AnimalChipization.Api.Contracts.Animals.ChangeAnimalTypeAnimals;
 using AnimalChipization.Api.Contracts.Animals.Create;
@@ -122,7 +121,7 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPut("{animalId:long}/types")]
     [ProducesResponseType(typeof(ChangeAnimalTypeAnimalsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -134,7 +133,7 @@ public class AnimalsController : ApiControllerBase
         {
             var model = Mapper.Map<ChangeAnimalTypeAnimalModel>(request);
             model.AnimalId = animalId;
-            
+
             var animal = await _animalService.ChangeAnimalTypeAsync(model);
             var response = Mapper.Map<ChangeAnimalTypeAnimalsResponse>(animal);
             return Ok(response);
@@ -162,39 +161,21 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
-    [HttpPost("{animalId:long}/locations/{pointId:long}")]
-    [ProducesResponseType(typeof(AddVisitedLocationAnimalsResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> AddVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long pointId)
-    {
-        try
-        {
-            var animal = await _animalService.AddVisitedLocationAsync(animalId, pointId);
-            var response = Mapper.Map<AddVisitedLocationAnimalsResponse>(animal);
-            return Created($"/animals/{response.Id}", response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
-    }
-    
-    [HttpDelete("{animalId:long}/locations/{visitedPointId:long}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
-    public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
-    {
-        try
-        {
-            await _animalService.DeleteVisitedLocationAsync(animalId, visitedPointId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
-    }
+
+    // [HttpDelete("{animalId:long}/locations/{visitedPointId:long}")]
+    // [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    // [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    // [Authorize("RequireAuthenticated")]
+    // public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
+    // {
+    //     try
+    //     {
+    //         await _animalService.DeleteVisitedLocationAsync(animalId, visitedPointId);
+    //         return Ok();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return ExceptionResult(e);
+    //     }
+    // }
 }
