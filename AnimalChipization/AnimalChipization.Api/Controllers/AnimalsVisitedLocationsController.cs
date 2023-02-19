@@ -1,5 +1,8 @@
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations;
+using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
+using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 using AnimalChipization.Core.Validation;
+using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +48,27 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
         {
             await _animalVisitedLocationService.DeleteAsync(animalId, visitedPointId);
             return Ok();
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+
+    [HttpPut]
+    [ProducesResponseType(typeof(IEnumerable<UpdateAnimalsVisitedLocationsResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Update([GreaterThan(0L)] long animalId, [FromBody] UpdateAnimalsVisitedLocationsRequest request)
+    {
+        try
+        {
+            var updateModel = Mapper.Map<UpdateAnimalVisitedLocationModel>(request);
+            updateModel.AnimalId = animalId;
+
+            var account = await _animalVisitedLocationService.UpdateAsync(updateModel);
+            var response = Mapper.Map<UpdateAnimalsVisitedLocationsResponse>(account);
+            return Ok(response);
         }
         catch (Exception e)
         {

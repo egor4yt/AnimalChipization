@@ -61,7 +61,7 @@ public class AccountsController : ApiControllerBase
     }
 
     [HttpPut("{accountId:int}")]
-    [ProducesResponseType(typeof(IEnumerable<UpdateAccountsResponseItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UpdateAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0)] int accountId, [FromBody] UpdateAccountsRequest request)
@@ -74,7 +74,7 @@ public class AccountsController : ApiControllerBase
             updateModel.Id = accountId;
 
             var account = await _accountService.UpdateAsync(updateModel);
-            var response = Mapper.Map<UpdateAccountsResponseItem>(account);
+            var response = Mapper.Map<UpdateAccountsResponse>(account);
             return Ok(response);
         }
         catch (Exception e)

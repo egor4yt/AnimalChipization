@@ -2,9 +2,9 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions.AnimalVisitedLocation;
 
-public class AnimalVisitedLocationDeleteAsyncException : Exception, IApiException
+public class AnimalVisitedLocationDeleteException : Exception, IApiException
 {
-    public AnimalVisitedLocationDeleteAsyncException(string apiMessage, HttpStatusCode httpStatusCode)
+    public AnimalVisitedLocationDeleteException(string apiMessage, HttpStatusCode httpStatusCode)
     {
         ApiMessage = apiMessage;
         HttpStatusCode = httpStatusCode;

@@ -3,6 +3,7 @@ using AnimalChipization.Core.Exceptions.AnimalVisitedLocation;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Data.Repositories.Interfaces;
+using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Services.Interfaces;
 
 namespace AnimalChipization.Services.Services;
@@ -44,10 +45,10 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
     public async Task DeleteAsync(long animalId, long visitedPointId)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
-        if (animal == null) throw new AnimalVisitedLocationDeleteAsyncException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+        if (animal == null) throw new AnimalVisitedLocationDeleteException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
 
         var visitedLocationExists = animal.AnimalVisitedLocations.Any(x => x.Id == visitedPointId);
-        if (visitedLocationExists == false) throw new AnimalVisitedLocationDeleteAsyncException($"Animal with id {animalId} does not have visited location with id {visitedPointId}", HttpStatusCode.NotFound);
+        if (visitedLocationExists == false) throw new AnimalVisitedLocationDeleteException($"Animal with id {animalId} does not have visited location with id {visitedPointId}", HttpStatusCode.NotFound);
 
         var visitedLocationsToDelete = new List<AnimalVisitedLocation>();
 
@@ -58,5 +59,27 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
         visitedLocationsToDelete.Add(animal.AnimalVisitedLocations.First(x => x.Id == visitedPointId));
 
         await _animalVisitedLocationRepository.DeleteRangeAsync(visitedLocationsToDelete);
+    }
+
+    public async Task<AnimalVisitedLocation> UpdateAsync(UpdateAnimalVisitedLocationModel model)
+    {
+        var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == model.AnimalId);
+        if (animal == null) throw new AnimalVisitedLocationUpdateException($"Animal with id {model.AnimalId} does not exists", HttpStatusCode.NotFound);
+
+        var visitedLocation = animal.AnimalVisitedLocations.FirstOrDefault(x => x.Id == model.VisitedLocationPointId);
+        if (animal.AnimalVisitedLocations.Count == 0 || visitedLocation == null) throw new AnimalVisitedLocationUpdateException($"Visited location with id {model.VisitedLocationPointId} does not exists", HttpStatusCode.NotFound);
+
+        if (visitedLocation.Id == animal.AnimalVisitedLocations[0].Id && animal.ChippingLocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("First visited location can't be chipping location", HttpStatusCode.BadRequest);
+        if (visitedLocation.LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException($"Visited location already is {model.LocationPointId}", HttpStatusCode.BadRequest);
+
+
+        var visitedLocationIndex = animal.AnimalVisitedLocations.IndexOf(visitedLocation);
+        if (visitedLocationIndex > 0 && animal.AnimalVisitedLocations[visitedLocationIndex - 1].LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("Previous location has the same id", HttpStatusCode.BadRequest);
+        if (visitedLocationIndex < animal.AnimalVisitedLocations.Count - 1 && animal.AnimalVisitedLocations[visitedLocationIndex + 1].LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("Following location has the same id", HttpStatusCode.BadRequest);
+        if (visitedLocation.LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException($"Visited location already is {model.LocationPointId}", HttpStatusCode.BadRequest);
+
+        visitedLocation.LocationId = model.LocationPointId;
+        
+        return await _animalVisitedLocationRepository.UpdateAsync(visitedLocation);
     }
 }

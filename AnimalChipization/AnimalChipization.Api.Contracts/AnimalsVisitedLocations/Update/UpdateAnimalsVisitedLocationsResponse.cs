@@ -1,6 +1,6 @@
-namespace AnimalChipization.Api.Contracts.AnimalsVisitedLocations;
+namespace AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 
-public class AddAnimalsVisitedLocationsResponse
+public class UpdateAnimalsVisitedLocationsResponse
 {
     public long Id { get; set; }
     public DateTime DateTimeOfVisitLocationPoint { get; set; }
