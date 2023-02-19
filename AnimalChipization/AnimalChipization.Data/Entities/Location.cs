@@ -13,4 +13,5 @@ public class Location : EntityBase
     public double Latitude { get; set; }
 
     public List<Animal> Animals { get; set; }
+    public List<AnimalVisitedLocation> AnimalsVisitedLocations { get; set; }
 }

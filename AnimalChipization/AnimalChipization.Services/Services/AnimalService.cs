@@ -26,7 +26,7 @@ public class AnimalService : IAnimalService
 
     public async Task<Animal?> GetByIdAsync(long animalId)
     {
-        return await _animalRepository.FindFirstOrDefaultAsync(x => x.Id == animalId);
+        return await _animalRepository.FirstOrDefaultWithAnimalsTypesAsync(x => x.Id == animalId);
     }
 
     public async Task<Animal> CreateAsync(CreateAnimalModel model)
@@ -74,6 +74,7 @@ public class AnimalService : IAnimalService
             .OrderBy(x => x.Id)
             .Skip(model.From)
             .Take(model.Size)
+            .Include(x => x.AnimalTypes)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -116,12 +117,34 @@ public class AnimalService : IAnimalService
         return await _animalRepository.UpdateAsync(animal);
     }
 
+    public async Task<Animal> ChangeAnimalTypeAsync(ChangeAnimalTypeAnimalModel model)
+    {
+        var animal = await _animalRepository.FirstOrDefaultWithAnimalsTypesAsync(x => x.Id == model.AnimalId);
+        if (animal == null) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} does not exists", HttpStatusCode.NotFound);
+
+        var animalTypes = await _animalTypeRepository.FindAllAsync(x => x.Id == model.OldTypeId || x.Id == model.NewTypeId);
+
+        var oldType = animalTypes.FirstOrDefault(x => x.Id == model.OldTypeId);
+        if (oldType == null) throw new AnimalChangeAnimalTypeException($"Animal type with id {model.OldTypeId} does not exists", HttpStatusCode.NotFound);
+
+        var newType = animalTypes.FirstOrDefault(x => x.Id == model.NewTypeId);
+        if (newType == null) throw new AnimalChangeAnimalTypeException($"Animal type with id {model.NewTypeId} does not exists", HttpStatusCode.NotFound);
+
+        if (animal.AnimalTypes.Any(x => x.Id == oldType.Id) == false) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} already has type with id {oldType.Id}", HttpStatusCode.NotFound);
+        if (animal.AnimalTypes.Any(x => x.Id == newType.Id)) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} already has type with id {newType.Id}", HttpStatusCode.Conflict);
+
+        animal.AnimalTypes.RemoveAll(x => x.Id == oldType.Id);
+        animal.AnimalTypes.Add(newType);
+
+        return await _animalRepository.UpdateAsync(animal);
+    }
+
     public async Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId)
     {
         var animal = await _animalRepository.FirstOrDefaultWithAnimalsTypesAsync(x => x.Id == animalId);
         if (animal == null) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
 
-        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId) == false) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} already has type with id {animalTypeId}", HttpStatusCode.NotFound);
+        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId) == false) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} has not animal type with id {animalTypeId}", HttpStatusCode.NotFound);
         if (animal.AnimalTypes.Count == 1) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} has only one type", HttpStatusCode.BadRequest);
 
         var animalType = await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
@@ -129,5 +152,46 @@ public class AnimalService : IAnimalService
 
         animal.AnimalTypes.RemoveAll(x => x.Id == animalType.Id);
         return await _animalRepository.UpdateAsync(animal);
+    }
+
+    public async Task<Animal> AddVisitedLocationAsync(long animalId, long pointId)
+    {
+        var animal = await _animalRepository.FirstOrDefaultWithVisitedLocations(x => x.Id == animalId);
+        if (animal == null) throw new AnimalAddVisitedLocationException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+
+        if (animal.LifeStatus == LifeStatus.Dead) throw new AnimalAddVisitedLocationException($"Animal with id {animalId} is dead", HttpStatusCode.BadRequest);
+        if (animal.ChippingLocationId == pointId) throw new AnimalAddVisitedLocationException($"Location with id {pointId} is chipping location", HttpStatusCode.BadRequest);
+
+        var location = await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == pointId);
+        if (location == null) throw new AnimalAddVisitedLocationException($"Location with id {pointId} does not exists", HttpStatusCode.NotFound);
+        // if (animal.Locations.Last().Id == location.Id) throw new AnimalAddVisitedLocationException($"Animal already in location with id {location.Id}", HttpStatusCode.BadRequest);
+        //todo: add validation if animal located in chipper location it is only one visited location. Api 6.2. response code: 400
+
+        // animal.Locations.Add(location);
+
+        return await _animalRepository.UpdateAsync(animal);
+    }
+
+    public Task<Animal> ChangeVisitedLocationAsync(ChangeVisitedLocationAnimalModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task DeleteVisitedLocationAsync(long animalId, long visitedPointId)
+    {
+        var animal = await _animalRepository.FirstOrDefaultWithVisitedLocations(x => x.Id == animalId);
+        if (animal == null) throw new AnimalDeleteVisitedLocationException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+
+        var visitedLocationExists = animal.AnimalVisitedLocations.Any(x => x.Id == visitedPointId);
+        if (visitedLocationExists == false) throw new AnimalDeleteVisitedLocationException($"Animal with id {animalId} does not have visited location with id {visitedPointId}", HttpStatusCode.NotFound);
+
+
+        if (animal.AnimalVisitedLocations.Count >= 2
+            && animal.AnimalVisitedLocations[0].Id == visitedPointId 
+            && animal.AnimalVisitedLocations[1].LocationId == animal.ChippingLocationId) animal.AnimalVisitedLocations.RemoveAll(x => x.Id == animal.AnimalVisitedLocations[1].Id);
+
+        animal.AnimalVisitedLocations.RemoveAll(x => x.Id == visitedPointId);
+
+        await _animalRepository.UpdateAsync(animal);
     }
 }

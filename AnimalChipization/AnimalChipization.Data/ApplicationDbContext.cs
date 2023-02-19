@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<AnimalType> AnimalsTypes { get; set; }
     public DbSet<Animal> Animals { get; set; }
     public DbSet<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
+    public DbSet<AnimalVisitedLocation> AnimalsVisitedLocations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,8 +32,8 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(animal => animal.ChippingLocationId);
 
         builder.Entity<Animal>()
-            .HasMany(animalType => animalType.AnimalTypes)
-            .WithMany(animal => animal.Animals)
+            .HasMany(animal => animal.AnimalTypes)
+            .WithMany(animalType => animalType.Animals)
             .UsingEntity<AnimalTypeAnimal>(
                 entity => entity
                     .HasOne(p => p.AnimalType)
@@ -48,5 +49,39 @@ public class ApplicationDbContext : DbContext
                     entity.HasKey(p => new { p.AnimalId, p.AnimalTypeId });
                 }
             );
+        
+        builder.Entity<AnimalVisitedLocation>()
+            .HasKey(t => new { t.AnimalId, t.LocationId });
+
+        builder.Entity<AnimalVisitedLocation>()
+            .HasOne(pt => pt.Location)
+            .WithMany(p => p.AnimalsVisitedLocations)
+            .HasForeignKey(pt => pt.LocationId);
+
+        builder.Entity<AnimalVisitedLocation>()
+            .HasOne(pt => pt.Animal)
+            .WithMany(t => t.AnimalVisitedLocations)
+            .HasForeignKey(pt => pt.AnimalId);
+        
+        
+        //
+        // builder.Entity<Animal>()
+        //     .HasMany(animal => animal.Locations)
+        //     .WithMany(locations => locations.Animals)
+        //     .UsingEntity<AnimalVisitedLocation>(
+        //         entity => entity
+        //             .HasOne(p => p.Location)
+        //             .WithMany(p => p.AnimalsVisitedLocations)
+        //             .HasForeignKey(p => p.LocationId),
+        //         entity => entity
+        //             .HasOne(p => p.Animal)
+        //             .WithMany(p => p.AnimalsVisitedLocations)
+        //             .HasForeignKey(p => p.AnimalId),
+        //         entity =>
+        //         {
+        //             entity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        //             entity.HasKey(p => new { p.AnimalId, p.LocationId });
+        //         }
+        //     );
     }
 }

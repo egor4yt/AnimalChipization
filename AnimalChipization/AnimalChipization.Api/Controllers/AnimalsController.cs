@@ -1,4 +1,6 @@
+using AnimalChipization.Api.Contracts.Animals.AddVisitedLocationAnimals;
 using AnimalChipization.Api.Contracts.Animals.AttachAnimalType;
+using AnimalChipization.Api.Contracts.Animals.ChangeAnimalTypeAnimals;
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.DeleteAnimalType;
 using AnimalChipization.Api.Contracts.Animals.GetById;
@@ -51,8 +53,8 @@ public class AnimalsController : ApiControllerBase
         try
         {
             var searchModel = Mapper.Map<SearchAnimalModel>(request);
-            var accounts = await _animalService.SearchAsync(searchModel);
-            var response = Mapper.Map<IEnumerable<SearchAnimalsResponseItem>>(accounts);
+            var animals = await _animalService.SearchAsync(searchModel);
+            var response = Mapper.Map<IEnumerable<SearchAnimalsResponseItem>>(animals);
             return Ok(response);
         }
         catch (Exception e)
@@ -92,8 +94,8 @@ public class AnimalsController : ApiControllerBase
             var updateModel = Mapper.Map<UpdateAnimalModel>(request);
             updateModel.Id = animalId;
 
-            var account = await _animalService.UpdateAsync(updateModel);
-            var response = Mapper.Map<UpdateAnimalsResponse>(account);
+            var animal = await _animalService.UpdateAsync(updateModel);
+            var response = Mapper.Map<UpdateAnimalsResponse>(animal);
             return Ok(response);
         }
         catch (Exception e)
@@ -113,7 +115,29 @@ public class AnimalsController : ApiControllerBase
         {
             var animal = await _animalService.AttachAnimalTypeAsync(animalId, animalTypeId);
             var response = Mapper.Map<AttachAnimalTypeAnimalsResponse>(animal);
-            return Created($"/animals/{animalId}", response);
+            return Created($"/animals/{response.Id}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpPut("{animalId:long}/types")]
+    [ProducesResponseType(typeof(ChangeAnimalTypeAnimalsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> ChangeAnimalType([FromRoute] [GreaterThan(0L)] long animalId, [FromBody] ChangeAnimalTypeAnimalsRequest request)
+    {
+        try
+        {
+            var model = Mapper.Map<ChangeAnimalTypeAnimalModel>(request);
+            model.AnimalId = animalId;
+            
+            var animal = await _animalService.ChangeAnimalTypeAsync(model);
+            var response = Mapper.Map<ChangeAnimalTypeAnimalsResponse>(animal);
+            return Ok(response);
         }
         catch (Exception e)
         {
@@ -132,6 +156,41 @@ public class AnimalsController : ApiControllerBase
             var animal = await _animalService.DeleteAnimalTypeAsync(animalId, animalTypeId);
             var response = Mapper.Map<DeleteAnimalTypeAnimalsResponse>(animal);
             return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpPost("{animalId:long}/locations/{pointId:long}")]
+    [ProducesResponseType(typeof(AddVisitedLocationAnimalsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> AddVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long pointId)
+    {
+        try
+        {
+            var animal = await _animalService.AddVisitedLocationAsync(animalId, pointId);
+            var response = Mapper.Map<AddVisitedLocationAnimalsResponse>(animal);
+            return Created($"/animals/{response.Id}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpDelete("{animalId:long}/locations/{visitedPointId:long}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
+    {
+        try
+        {
+            await _animalService.DeleteVisitedLocationAsync(animalId, visitedPointId);
+            return Ok();
         }
         catch (Exception e)
         {

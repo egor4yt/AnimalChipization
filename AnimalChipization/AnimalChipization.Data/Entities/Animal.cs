@@ -39,8 +39,6 @@ public class Animal : EntityBase
     public virtual List<AnimalType> AnimalTypes { get; set; }
     public virtual List<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
 
-    // todo: add chipping location
-    // [Required]
-    // public long ChippingLocationId { get; set; } 
-    // public virtual ChippingLocation ChippingLocation { get; set; }   
+    [Required]
+    public virtual List<AnimalVisitedLocation> AnimalVisitedLocations { get; set; }   
 }
