@@ -154,4 +154,15 @@ public class AnimalService : IAnimalService
         animal.AnimalTypes.RemoveAll(x => x.Id == animalType.Id);
         return await _animalRepository.UpdateAsync(animal);
     }
+    
+    public async Task DeleteAsync(long animalId)
+    {
+        var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
+        if (animal is null) throw new AnimalDeleteException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+
+        var lastVisitedLocation = animal.AnimalVisitedLocations.MaxBy(x => x.CreatedAt);
+        if (lastVisitedLocation is not null && lastVisitedLocation.LocationId != animal.ChippingLocationId) throw new AnimalDeleteException($"Animal is not in the chipping location", HttpStatusCode.BadRequest);
+        
+        await _animalRepository.DeleteAsync(animal);
+    }
 }

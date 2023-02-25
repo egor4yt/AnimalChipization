@@ -161,4 +161,21 @@ public class AnimalsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
+    
+    [HttpDelete("{animalId:long}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("RequireAuthenticated")]
+    public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long animalId)
+    {
+        try
+        {
+            await _animalService.DeleteAsync(animalId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
 }
