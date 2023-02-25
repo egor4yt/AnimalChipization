@@ -1,5 +1,5 @@
-using AnimalChipization.Api.Contracts.AnimalsVisitedLocations;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
+using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 using AnimalChipization.Core.Validation;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
@@ -18,6 +18,26 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     public AnimalsVisitedLocationsController(ILogger<ApiControllerBase> logger, IMapper mapper, IAnimalVisitedLocationService animalVisitedLocationService) : base(logger, mapper)
     {
         _animalVisitedLocationService = animalVisitedLocationService;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<GetAnimalsVisitedLocationsResponseItem>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("AllowAnonymous")]
+    public async Task<IActionResult> Get([FromRoute] [GreaterThan(0L)] long animalId, [FromQuery] GetAnimalsVisitedLocationsRequest request)
+    {
+        try
+        {
+            var getModel = Mapper.Map<GetAnimalVisitedLocationModel>(request);
+            getModel.AnimalId = animalId;
+            var visitedLocations = await _animalVisitedLocationService.GetAsync(getModel);
+            var response = Mapper.Map<IEnumerable<GetAnimalsVisitedLocationsResponseItem>>(visitedLocations);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
     }
 
     [HttpPost("{pointId:long}")]

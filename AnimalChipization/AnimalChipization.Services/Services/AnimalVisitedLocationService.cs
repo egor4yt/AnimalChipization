@@ -5,6 +5,7 @@ using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Services.Services;
 
@@ -19,6 +20,25 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
         _animalVisitedLocationRepository = animalVisitedLocationRepository;
         _animalRepository = animalRepository;
         _locationRepository = locationRepository;
+    }
+
+    public async Task<IEnumerable<AnimalVisitedLocation>> GetAsync(GetAnimalVisitedLocationModel model)
+    {
+        var animalExists = await _animalRepository.ExistsAsync(x => x.Id == model.AnimalId);
+        if (animalExists == false) throw new AnimalVisitedLocationGetException($"Animal with id {model.AnimalId} does not exists", HttpStatusCode.NotFound);
+        
+        var animalVisitedLocations = _animalVisitedLocationRepository.AsQueryable();
+
+        animalVisitedLocations = animalVisitedLocations.Where(x => x.AnimalId == model.AnimalId);
+        if (model.StartDateTime is not null) animalVisitedLocations = animalVisitedLocations.Where(x => x.CreatedAt >= model.StartDateTime);
+        if (model.EndDateTime is not null) animalVisitedLocations = animalVisitedLocations.Where(x => x.CreatedAt <= model.EndDateTime);
+
+        return await animalVisitedLocations
+            .OrderBy(x => x.CreatedAt)
+            .Skip(model.From)
+            .Take(model.Size)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<AnimalVisitedLocation> AddAsync(long animalId, long pointId)
@@ -79,7 +99,7 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
         if (visitedLocation.LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException($"Visited location already is {model.LocationPointId}", HttpStatusCode.BadRequest);
 
         visitedLocation.LocationId = model.LocationPointId;
-        
+
         return await _animalVisitedLocationRepository.UpdateAsync(visitedLocation);
     }
 }
