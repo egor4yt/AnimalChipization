@@ -49,14 +49,14 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
         if (animal.LifeStatus == LifeStatus.Dead) throw new AnimalVisitedLocationAddException($"Animal with id {animalId} is dead", HttpStatusCode.BadRequest);
         if (animal.AnimalVisitedLocations.Count == 0 && animal.ChippingLocationId == pointId) throw new AnimalVisitedLocationAddException("First visited location cant be chipping location", HttpStatusCode.BadRequest);
 
-        var location = await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == pointId);
-        if (location == null) throw new AnimalVisitedLocationAddException($"Location with id {pointId} does not exists", HttpStatusCode.NotFound);
-        if (animal.AnimalVisitedLocations.Count > 0 && animal.AnimalVisitedLocations.Last().LocationId == location.Id) throw new AnimalVisitedLocationAddException($"Animal already in location with id {location.Id}", HttpStatusCode.BadRequest);
+        var locationExists = await _locationRepository.ExistsAsync(x => x.Id == pointId);
+        if (locationExists == false) throw new AnimalVisitedLocationAddException($"Location with id {pointId} does not exists", HttpStatusCode.NotFound);
+        if (animal.AnimalVisitedLocations.Count > 0 && animal.AnimalVisitedLocations.Last().LocationId == pointId) throw new AnimalVisitedLocationAddException($"Animal already in location with id {pointId}", HttpStatusCode.BadRequest);
 
         var newAnimalVisitedLocation = new AnimalVisitedLocation
         {
             AnimalId = animal.Id,
-            LocationId = location.Id
+            LocationId = pointId
         };
         await _animalVisitedLocationRepository.InsertAsync(newAnimalVisitedLocation);
         return newAnimalVisitedLocation;
@@ -86,12 +86,14 @@ public class AnimalVisitedLocationService : IAnimalVisitedLocationService
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == model.AnimalId);
         if (animal == null) throw new AnimalVisitedLocationUpdateException($"Animal with id {model.AnimalId} does not exists", HttpStatusCode.NotFound);
 
+        var locationExists = await _locationRepository.ExistsAsync(x => x.Id == model.LocationPointId);
+        if (locationExists == false) throw new AnimalVisitedLocationUpdateException($"Location with id {model.LocationPointId} does not exists", HttpStatusCode.NotFound);
+        
         var visitedLocation = animal.AnimalVisitedLocations.FirstOrDefault(x => x.Id == model.VisitedLocationPointId);
         if (animal.AnimalVisitedLocations.Count == 0 || visitedLocation == null) throw new AnimalVisitedLocationUpdateException($"Visited location with id {model.VisitedLocationPointId} does not exists", HttpStatusCode.NotFound);
 
-        if (visitedLocation.Id == animal.AnimalVisitedLocations[0].Id && animal.ChippingLocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("First visited location can't be chipping location", HttpStatusCode.BadRequest);
+        if (animal.ChippingLocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("First visited location can't be chipping location", HttpStatusCode.BadRequest);
         if (visitedLocation.LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException($"Visited location already is {model.LocationPointId}", HttpStatusCode.BadRequest);
-
 
         var visitedLocationIndex = animal.AnimalVisitedLocations.IndexOf(visitedLocation);
         if (visitedLocationIndex > 0 && animal.AnimalVisitedLocations[visitedLocationIndex - 1].LocationId == model.LocationPointId) throw new AnimalVisitedLocationUpdateException("Previous location has the same id", HttpStatusCode.BadRequest);

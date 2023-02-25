@@ -5,5 +5,5 @@ namespace AnimalChipization.Data.Repositories.Interfaces;
 
 public interface ILocationRepository : IRepositoryBase<Location>
 {
-    Task<Location?> FirstOrDefaultWithAnimalsAsync(Expression<Func<Location, bool>> match);
+    Task<Location?> FirstOrDefaultFullAsync(Expression<Func<Location, bool>> match);
 }

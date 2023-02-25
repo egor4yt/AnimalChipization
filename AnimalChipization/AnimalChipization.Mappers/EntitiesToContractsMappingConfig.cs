@@ -19,6 +19,7 @@ using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Api.Contracts.Registration.Post;
+using AnimalChipization.Core.Extensions;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
 
@@ -56,6 +57,8 @@ public class EntitiesToContractsMappingConfig : Profile
         #region Animals
 
         CreateMap<Animal, CreateAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -63,6 +66,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, GetByIdAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -70,6 +75,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, SearchAnimalsResponseItem>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -77,6 +84,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, UpdateAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -84,6 +93,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, AttachAnimalTypeAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -91,6 +102,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, DeleteAnimalTypeAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -98,6 +111,8 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.VisitedLocations, opt => opt.MapFrom(p => p.AnimalVisitedLocations.Select(x => x.Id)));
 
         CreateMap<Animal, ChangeAnimalTypeAnimalsResponse>()
+            .ForMember(x => x.ChippingDateTime, opt => opt.MapFrom(p => p.ChippingDateTime.ToIso8601String()))
+            .ForMember(x => x.DeathDateTime, opt => opt.MapFrom(p => p.DeathDateTime.ToIso8601String()))
             .ForMember(x => x.AnimalTypes, opt => opt.MapFrom(p => p.AnimalTypes.Select(x => x.Id)))
             .ForMember(x => x.Weight, opt => opt.MapFrom(p => p.WeightKilograms))
             .ForMember(x => x.Height, opt => opt.MapFrom(p => p.HeightMeters))
@@ -109,15 +124,15 @@ public class EntitiesToContractsMappingConfig : Profile
         #region AnimalVisitedLocation
 
         CreateMap<AnimalVisitedLocation, AddAnimalsVisitedLocationsResponse>()
-            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt))
+            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
 
         CreateMap<AnimalVisitedLocation, UpdateAnimalsVisitedLocationsResponse>()
-            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt))
+            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
         
         CreateMap<AnimalVisitedLocation, GetAnimalsVisitedLocationsResponseItem>()
-            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt))
+            .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
         
         #endregion

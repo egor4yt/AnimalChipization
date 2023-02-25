@@ -91,7 +91,8 @@ public class AnimalService : IAnimalService
         var locationExists = await _locationRepository.ExistsAsync(x => x.Id == model.ChippingLocationId);
         if (locationExists == false) throw new AnimalCrateException($"Location with id {model.ChippingLocationId} does not exists", HttpStatusCode.NotFound);
 
-        // todo: validate new chipping location must be not equal first chipping location
+        var firstVisitedLocation = animal.AnimalVisitedLocations.FirstOrDefault();
+        if (firstVisitedLocation != null && firstVisitedLocation.LocationId == model.ChippingLocationId)  throw new AnimalCrateException($"Location with id {model.ChippingLocationId} is first visited location", HttpStatusCode.BadRequest);
 
         animal.ChipperId = model.ChipperId;
         animal.ChippingLocationId = model.ChippingLocationId;
@@ -100,6 +101,7 @@ public class AnimalService : IAnimalService
         animal.WeightKilograms = model.Weight;
         animal.HeightMeters = model.Height;
         animal.LengthMeters = model.Length;
+        animal.DeathDateTime = model.LifeStatus == LifeStatus.Dead ? DateTime.UtcNow : null;
 
         return await _animalRepository.UpdateAsync(animal);
     }
