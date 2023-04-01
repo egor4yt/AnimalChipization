@@ -3,6 +3,7 @@ using System;
 using AnimalChipization.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AnimalChipization.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230401042037_AddedAccountRole")]
+    partial class AddedAccountRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,32 +64,12 @@ namespace AnimalChipization.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 4, 1, 4, 25, 19, 625, DateTimeKind.Utc).AddTicks(390),
+                            CreatedAt = new DateTime(2023, 4, 1, 4, 20, 37, 97, DateTimeKind.Utc).AddTicks(3680),
                             Email = "admin@simbirsoft.com",
                             FirstName = "adminFirstName",
                             LastName = "adminLastName",
                             PasswordHash = "DAAAD6E5604E8E17BD9F108D91E26AFE6281DAC8FDA0091040A7A6D7BD9B43B5",
                             Role = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2023, 4, 1, 4, 25, 19, 625, DateTimeKind.Utc).AddTicks(610),
-                            Email = "chipper@simbirsoft.com",
-                            FirstName = "chipperFirstName",
-                            LastName = "chipperLastName",
-                            PasswordHash = "DAAAD6E5604E8E17BD9F108D91E26AFE6281DAC8FDA0091040A7A6D7BD9B43B5",
-                            Role = "CHIPPER"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2023, 4, 1, 4, 25, 19, 625, DateTimeKind.Utc).AddTicks(630),
-                            Email = "user@simbirsoft.com",
-                            FirstName = "userFirstName",
-                            LastName = "userLastName",
-                            PasswordHash = "DAAAD6E5604E8E17BD9F108D91E26AFE6281DAC8FDA0091040A7A6D7BD9B43B5",
-                            Role = "USER"
                         });
                 });
 

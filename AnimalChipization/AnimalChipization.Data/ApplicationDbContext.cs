@@ -1,4 +1,6 @@
+using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
+using AnimalChipization.Data.Entities.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnimalChipization.Data;
@@ -17,6 +19,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<AnimalVisitedLocation> AnimalsVisitedLocations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
+    {
+        UpdateStructure(builder);
+        SeedData(builder);
+        base.OnModelCreating(builder);
+    }
+
+    private static void UpdateStructure(ModelBuilder builder)
     {
         builder.Entity<AnimalTypeAnimal>()
             .HasKey(animalTypeAnimal => new { animalTypeAnimal.AnimalId, AccountId = animalTypeAnimal.AnimalTypeId });
@@ -59,26 +68,47 @@ public class ApplicationDbContext : DbContext
             .HasOne(pt => pt.Animal)
             .WithMany(t => t.AnimalVisitedLocations)
             .HasForeignKey(pt => pt.AnimalId);
+    }
+    
+    private static void SeedData(ModelBuilder builder)
+    {
+        var accounts = new List<Account>
+        {
+            new()
+            {
+                Id = 1,
+                CreatedAt = DateTime.UtcNow,
+                FirstName = "adminFirstName",
+                LastName = "adminLastName",
+                Email = "admin@simbirsoft.com",
+                Role = AccountRole.Administrator,
+                PasswordHash = SecurityHelper.ComputeSha256Hash("qwerty123"),
+                Animals = new List<Animal>()
+            },
+            new()
+            {
+                Id = 2,
+                CreatedAt = DateTime.UtcNow,
+                FirstName = "chipperFirstName",
+                LastName = "chipperLastName",
+                Email = "chipper@simbirsoft.com",
+                Role = AccountRole.Chipper,
+                PasswordHash = SecurityHelper.ComputeSha256Hash("qwerty123"),
+                Animals = new List<Animal>()
+            },
+            new()
+            {
+                Id = 3,
+                CreatedAt = DateTime.UtcNow,
+                FirstName = "userFirstName",
+                LastName = "userLastName",
+                Email = "user@simbirsoft.com",
+                Role = AccountRole.User,
+                PasswordHash = SecurityHelper.ComputeSha256Hash("qwerty123"),
+                Animals = new List<Animal>()
+            }
+        };
 
-
-        //
-        // builder.Entity<Animal>()
-        //     .HasMany(animal => animal.Locations)
-        //     .WithMany(locations => locations.Animals)
-        //     .UsingEntity<AnimalVisitedLocation>(
-        //         entity => entity
-        //             .HasOne(p => p.Location)
-        //             .WithMany(p => p.AnimalsVisitedLocations)
-        //             .HasForeignKey(p => p.LocationId),
-        //         entity => entity
-        //             .HasOne(p => p.Animal)
-        //             .WithMany(p => p.AnimalsVisitedLocations)
-        //             .HasForeignKey(p => p.AnimalId),
-        //         entity =>
-        //         {
-        //             entity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-        //             entity.HasKey(p => new { p.AnimalId, p.LocationId });
-        //         }
-        //     );
+        builder.Entity<Account>().HasData(accounts);
     }
 }

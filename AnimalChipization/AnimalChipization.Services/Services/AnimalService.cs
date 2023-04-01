@@ -1,5 +1,4 @@
-using System.Net;
-using AnimalChipization.Core.Exceptions.Animal;
+using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Data.Repositories.Interfaces;
@@ -32,13 +31,13 @@ public class AnimalService : IAnimalService
     public async Task<Animal> CreateAsync(CreateAnimalModel model)
     {
         var animalsTypes = await _animalTypeRepository.FindAllAsync(x => model.AnimalTypes.Contains(x.Id));
-        if (animalsTypes.Count != model.AnimalTypes.Count) throw new AnimalCrateException("One of accepted animals types does not exists", HttpStatusCode.NotFound);
+        if (animalsTypes.Count != model.AnimalTypes.Count) throw new NotFoundException("One of accepted animals types does not exists");
 
         var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
-        if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
+        if (accountExists == false) throw new NotFoundException($"Account with id {model.ChipperId} does not exists");
 
         var locationExists = await _locationRepository.ExistsAsync(x => x.Id == model.ChippingLocationId);
-        if (locationExists == false) throw new AnimalCrateException($"Location with id {model.ChippingLocationId} does not exists", HttpStatusCode.NotFound);
+        if (locationExists == false) throw new NotFoundException($"Location with id {model.ChippingLocationId} does not exists");
 
         var newAnimal = new Animal
         {
@@ -83,16 +82,16 @@ public class AnimalService : IAnimalService
     public async Task<Animal> UpdateAsync(UpdateAnimalModel model)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == model.Id);
-        if (animal == null) throw new AnimalUpdateException($"Animal with id {model.Id} does not exists", HttpStatusCode.NotFound);
+        if (animal == null) throw new NotFoundException($"Animal with id {model.Id} does not exists");
 
         var accountExists = await _accountRepository.ExistsAsync(x => x.Id == model.ChipperId);
-        if (accountExists == false) throw new AnimalCrateException($"Account with id {model.ChipperId} does not exists", HttpStatusCode.NotFound);
+        if (accountExists == false) throw new NotFoundException($"Account with id {model.ChipperId} does not exists");
 
         var locationExists = await _locationRepository.ExistsAsync(x => x.Id == model.ChippingLocationId);
-        if (locationExists == false) throw new AnimalCrateException($"Location with id {model.ChippingLocationId} does not exists", HttpStatusCode.NotFound);
+        if (locationExists == false) throw new NotFoundException($"Location with id {model.ChippingLocationId} does not exists");
 
         var firstVisitedLocation = animal.AnimalVisitedLocations.FirstOrDefault();
-        if (firstVisitedLocation != null && firstVisitedLocation.LocationId == model.ChippingLocationId)  throw new AnimalCrateException($"Location with id {model.ChippingLocationId} is first visited location", HttpStatusCode.BadRequest);
+        if (firstVisitedLocation != null && firstVisitedLocation.LocationId == model.ChippingLocationId) throw new BadRequestException($"Location with id {model.ChippingLocationId} is first visited location");
 
         animal.ChipperId = model.ChipperId;
         animal.ChippingLocationId = model.ChippingLocationId;
@@ -109,12 +108,12 @@ public class AnimalService : IAnimalService
     public async Task<Animal> AttachAnimalTypeAsync(long animalId, long animalTypeId)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
-        if (animal == null) throw new AnimalAttachAnimalTypeException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+        if (animal == null) throw new NotFoundException($"Animal with id {animalId} does not exists");
 
-        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId)) throw new AnimalAttachAnimalTypeException($"Animal with id {animalId} already has type with id {animalTypeId}", HttpStatusCode.Conflict);
+        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId)) throw new ConflictException($"Animal with id {animalId} already has type with id {animalTypeId}");
 
         var animalType = await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
-        if (animalType == null) throw new AnimalAttachAnimalTypeException($"Animal type with id {animalTypeId} does not exists", HttpStatusCode.NotFound);
+        if (animalType == null) throw new NotFoundException($"Animal type with id {animalTypeId} does not exists");
 
         animal.AnimalTypes.Add(animalType);
         return await _animalRepository.UpdateAsync(animal);
@@ -123,18 +122,18 @@ public class AnimalService : IAnimalService
     public async Task<Animal> ChangeAnimalTypeAsync(ChangeAnimalTypeAnimalModel model)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == model.AnimalId);
-        if (animal == null) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} does not exists", HttpStatusCode.NotFound);
+        if (animal == null) throw new NotFoundException($"Animal with id {model.AnimalId} does not exists");
 
         var animalTypes = await _animalTypeRepository.FindAllAsync(x => x.Id == model.OldTypeId || x.Id == model.NewTypeId);
 
         var oldType = animalTypes.FirstOrDefault(x => x.Id == model.OldTypeId);
-        if (oldType == null) throw new AnimalChangeAnimalTypeException($"Animal type with id {model.OldTypeId} does not exists", HttpStatusCode.NotFound);
+        if (oldType == null) throw new NotFoundException($"Animal type with id {model.OldTypeId} does not exists");
 
         var newType = animalTypes.FirstOrDefault(x => x.Id == model.NewTypeId);
-        if (newType == null) throw new AnimalChangeAnimalTypeException($"Animal type with id {model.NewTypeId} does not exists", HttpStatusCode.NotFound);
+        if (newType == null) throw new NotFoundException($"Animal type with id {model.NewTypeId} does not exists");
 
-        if (animal.AnimalTypes.Any(x => x.Id == oldType.Id) == false) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} already has type with id {oldType.Id}", HttpStatusCode.NotFound);
-        if (animal.AnimalTypes.Any(x => x.Id == newType.Id)) throw new AnimalChangeAnimalTypeException($"Animal with id {model.AnimalId} already has type with id {newType.Id}", HttpStatusCode.Conflict);
+        if (animal.AnimalTypes.Any(x => x.Id == oldType.Id) == false) throw new NotFoundException($"Animal with id {model.AnimalId} already has type with id {oldType.Id}");
+        if (animal.AnimalTypes.Any(x => x.Id == newType.Id)) throw new ConflictException($"Animal with id {model.AnimalId} already has type with id {newType.Id}");
 
         animal.AnimalTypes.RemoveAll(x => x.Id == oldType.Id);
         animal.AnimalTypes.Add(newType);
@@ -145,26 +144,26 @@ public class AnimalService : IAnimalService
     public async Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
-        if (animal == null) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+        if (animal == null) throw new NotFoundException($"Animal with id {animalId} does not exists");
 
-        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId) == false) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} has not animal type with id {animalTypeId}", HttpStatusCode.NotFound);
-        if (animal.AnimalTypes.Count == 1) throw new AnimalDeleteAnimalTypeException($"Animal with id {animalId} has only one type", HttpStatusCode.BadRequest);
+        if (animal.AnimalTypes.Any(x => x.Id == animalTypeId) == false) throw new NotFoundException($"Animal with id {animalId} has not animal type with id {animalTypeId}");
+        if (animal.AnimalTypes.Count == 1) throw new BadRequestException($"Animal with id {animalId} has only one type");
 
         var animalType = await _animalTypeRepository.FindFirstOrDefaultAsync(x => x.Id == animalTypeId);
-        if (animalType == null) throw new AnimalDeleteAnimalTypeException($"Animal type with id {animalTypeId} does not exists", HttpStatusCode.NotFound);
+        if (animalType == null) throw new NotFoundException($"Animal type with id {animalTypeId} does not exists");
 
         animal.AnimalTypes.RemoveAll(x => x.Id == animalType.Id);
         return await _animalRepository.UpdateAsync(animal);
     }
-    
+
     public async Task DeleteAsync(long animalId)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
-        if (animal is null) throw new AnimalDeleteException($"Animal with id {animalId} does not exists", HttpStatusCode.NotFound);
+        if (animal is null) throw new NotFoundException($"Animal with id {animalId} does not exists");
 
         var lastVisitedLocation = animal.AnimalVisitedLocations.MaxBy(x => x.CreatedAt);
-        if (lastVisitedLocation is not null && lastVisitedLocation.LocationId != animal.ChippingLocationId) throw new AnimalDeleteException($"Animal is not in the chipping location", HttpStatusCode.BadRequest);
-        
+        if (lastVisitedLocation is not null && lastVisitedLocation.LocationId != animal.ChippingLocationId) throw new BadRequestException("Animal is not in the chipping location");
+
         await _animalRepository.DeleteAsync(animal);
     }
 }

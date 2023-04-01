@@ -39,7 +39,8 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             new("FirstName", account.FirstName),
             new("LastName", account.LastName),
             new("Email", account.Email),
-            new("UserId", account.Id.ToString())
+            new("UserId", account.Id.ToString()),
+            new(ClaimsIdentity.DefaultRoleClaimType, account.Role),
         };
 
         var claimsIdentity = new ClaimsIdentity(authenticatedUser, claims);

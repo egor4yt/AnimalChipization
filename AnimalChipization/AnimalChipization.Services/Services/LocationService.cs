@@ -1,5 +1,4 @@
-using System.Net;
-using AnimalChipization.Core.Exceptions.Location;
+using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Models.Location;
@@ -23,12 +22,12 @@ public class LocationService : ILocationService
 
     public async Task CreateAsync(Location location)
     {
-        if (location == null) throw new LocationCreateException("Location was null", HttpStatusCode.BadRequest);
+        if (location == null) throw new BadRequestException("Location was null");
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
             Math.Abs(x.Longitude - location.Longitude) < 0.0001
             && Math.Abs(x.Latitude - location.Latitude) < 0.0001);
-        if (locationExists) throw new LocationCreateException($"Location with longitude: {location.Longitude} and latitude: {location.Latitude} already exists", HttpStatusCode.Conflict);
+        if (locationExists) throw new ConflictException($"Location with longitude: {location.Longitude} and latitude: {location.Latitude} already exists");
 
         await _locationRepository.InsertAsync(location);
     }
@@ -36,14 +35,14 @@ public class LocationService : ILocationService
     public async Task<Location> UpdateAsync(UpdateLocationModel model)
     {
         var location = await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
-        if (location == null) throw new LocationUpdateException($"Location with id {model.Id} does not exists", HttpStatusCode.NotFound);
+        if (location == null) throw new NotFoundException($"Location with id {model.Id} does not exists");
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
             Math.Abs(x.Longitude - model.Longitude) < 0.01
             && Math.Abs(x.Latitude - model.Latitude) < 0.01
             && x.Id != model.Id
         );
-        if (locationExists) throw new LocationCreateException($"Location with longitude: {model.Longitude} and latitude: {model.Latitude} already exists", HttpStatusCode.Conflict);
+        if (locationExists) throw new ConflictException($"Location with longitude: {model.Longitude} and latitude: {model.Latitude} already exists");
 
         location.Longitude = model.Longitude;
         location.Latitude = model.Latitude;
@@ -54,9 +53,9 @@ public class LocationService : ILocationService
     public async Task DeleteAsync(long pointId)
     {
         var location = await _locationRepository.FirstOrDefaultFullAsync(x => x.Id == pointId);
-        if (location is null) throw new LocationDeleteException($"Location with id {pointId} does not exists", HttpStatusCode.NotFound);
-        if (location.AnimalsVisitedLocations.Any()) throw new LocationDeleteException($"Location with id {pointId} visited by an animals", HttpStatusCode.BadRequest);
-        if (location.Animals.Any()) throw new LocationDeleteException($"Location with id {pointId} has relations with animals", HttpStatusCode.BadRequest);
+        if (location is null) throw new NotFoundException($"Location with id {pointId} does not exists");
+        if (location.AnimalsVisitedLocations.Any()) throw new BadRequestException($"Location with id {pointId} visited by an animals");
+        if (location.Animals.Any()) throw new BadRequestException($"Location with id {pointId} has relations with animals");
 
         await _locationRepository.DeleteAsync(location);
     }

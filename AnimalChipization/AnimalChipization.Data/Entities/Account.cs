@@ -18,6 +18,10 @@ public class Account : EntityBase
     [Required]
     [Column(TypeName = "varchar(128)")]
     public string Email { get; set; }
+    
+    [Required]
+    [Column(TypeName = "varchar(128)")]
+    public string Role { get; set; }
 
     [Required]
     [Column(TypeName = "varchar(64)")]
