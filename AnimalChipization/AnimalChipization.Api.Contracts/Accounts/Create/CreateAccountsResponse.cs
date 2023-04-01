@@ -1,6 +1,6 @@
-namespace AnimalChipization.Api.Contracts.Accounts.GetById;
+namespace AnimalChipization.Api.Contracts.Accounts.Create;
 
-public class GetByIdAccountsResponse
+public class CreateAccountsResponse
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using AnimalChipization.Core.Validation;
 
-namespace AnimalChipization.Api.Contracts.Accounts.Update;
+namespace AnimalChipization.Api.Contracts.Accounts.Create;
 
-public class UpdateAccountsRequest
+public class CreateAccountsRequest
 {
     [Required]
     public string FirstName { get; set; }
@@ -17,7 +17,7 @@ public class UpdateAccountsRequest
 
     [Required]
     public string Password { get; set; }
-    
+
     [Role(false)]
     public string Role { get; set; }
 }

@@ -1,3 +1,4 @@
+using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Registration.Post;
@@ -18,6 +19,16 @@ public class ContractsToEntitiesMappingConfig : Profile
                 opt => opt.MapFrom(p => SecurityHelper.ComputeSha256Hash(p.Password)))
             .ForMember(dest => dest.Email,
                 opt => opt.MapFrom(p => p.Email.ToLower().Trim()));
+
+        #endregion
+
+        #region Accounts
+
+        CreateMap<CreateAccountsRequest, Account>()
+            .ForMember(dest => dest.PasswordHash,
+                opt => opt.MapFrom(p => SecurityHelper.ComputeSha256Hash(p.Password)))
+            .ForMember(dest => dest.Email,
+                opt => opt.MapFrom(p => p.Email.ToLower().Trim()));;
 
         #endregion
 

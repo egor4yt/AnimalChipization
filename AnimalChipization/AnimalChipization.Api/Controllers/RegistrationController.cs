@@ -1,5 +1,6 @@
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Data.Entities;
+using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -13,8 +14,9 @@ public class RegistrationController : ApiControllerBase
 {
     private readonly IAccountService _accountService;
 
-    public RegistrationController(ILogger<RegistrationController> logger, IMapper mapper,
-        IAccountService accountService) : base(logger, mapper)
+    public RegistrationController(IMapper mapper,
+        IAccountService accountService,
+        ILogger<AccountsController> logger) : base(logger, mapper)
     {
         _accountService = accountService;
     }
@@ -30,6 +32,8 @@ public class RegistrationController : ApiControllerBase
             if (HttpContext.Request.Headers.Authorization.Count != 0) return Forbid();
 
             var account = Mapper.Map<Account>(request);
+            account.Role = AccountRole.User;
+
             await _accountService.RegisterAsync(account);
 
             var response = Mapper.Map<PostRegistrationResponse>(account);

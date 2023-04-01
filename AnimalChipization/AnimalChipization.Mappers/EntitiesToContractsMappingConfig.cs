@@ -1,3 +1,4 @@
+using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
@@ -35,6 +36,7 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Account, GetByIdAccountsResponse>();
         CreateMap<Account, SearchAccountsResponseItem>();
         CreateMap<Account, UpdateAccountsResponse>();
+        CreateMap<Account, CreateAccountsResponse>();
 
         #endregion
 

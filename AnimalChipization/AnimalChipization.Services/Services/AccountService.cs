@@ -23,7 +23,6 @@ public class AccountService : IAccountService
         if (account == null) throw new BadRequestException("Account was null");
 
         account.Email = account.Email.ToLower();
-        account.Role = AccountRole.User;
         var accountExist = await _accountRepository.ExistsAsync(x => x.Email.ToLower() == account.Email);
         if (accountExist) throw new ConflictException($"Account with email {account.Email} already exists");
 
@@ -32,7 +31,8 @@ public class AccountService : IAccountService
 
     public async Task<Account?> GetByIdAsync(int accountId)
     {
-        return await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == accountId);
+        var account = await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == accountId);
+        return account;
     }
 
     public async Task<Account?> AuthenticateAsync(string email, string password)
@@ -65,14 +65,15 @@ public class AccountService : IAccountService
         model.Email = model.Email.ToLower().Trim();
 
         var account = await _accountRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
-        if (account == null) throw new ForbiddenException($"Account with id {model.Id} does not exists");
+        if (account == null) throw new NotFoundException($"Account with id {model.Id} not found");
 
-        var accountExist = await _accountRepository.ExistsAsync(x => x.Email.ToLower() == account.Email.ToLower() && x.Id != model.Id);
+        var accountExist = await _accountRepository.ExistsAsync(x => x.Email.ToLower() == model.Email.ToLower() && x.Id != model.Id);
         if (accountExist) throw new ConflictException($"Account with email {model.Email} already exists");
 
         account.FirstName = model.FirstName;
         account.LastName = model.LastName;
         account.Email = model.Email;
+        account.Role = model.Role;
         account.PasswordHash = SecurityHelper.ComputeSha256Hash(model.Password);
 
         return await _accountRepository.UpdateAsync(account);
@@ -81,7 +82,7 @@ public class AccountService : IAccountService
     public async Task DeleteAsync(int accountId)
     {
         var account = await _accountRepository.FirstOrDefaultWithAnimalsAsync(x => x.Id == accountId);
-        if (account is null) throw new ForbiddenException($"Account with id {accountId} does not exists");
+        if (account is null) throw new NotFoundException($"Account with id {accountId} does not exists");
         if (account.Animals.Any()) throw new BadRequestException($"Account with id {accountId} has relations with animals");
 
         await _accountRepository.DeleteAsync(account);

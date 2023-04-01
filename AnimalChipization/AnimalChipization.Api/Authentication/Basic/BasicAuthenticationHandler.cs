@@ -21,10 +21,10 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
     {
         if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader) == false) return AuthenticateResult.Fail("Authorization header is missing");
         Response.Headers.Add("WWW-Authenticate", "Basic");
-        
+
         var authHeaderRegex = new Regex(@"Basic (.*)");
         if (authHeaderRegex.IsMatch(authorizationHeader.ToString()) == false) return AuthenticateResult.Fail("Authorization code not formatted properly");
-        
+
         var authBase64 = Encoding.UTF8.GetString(Convert.FromBase64String(authHeaderRegex.Replace(authorizationHeader.ToString(), "$1")));
         var authSplit = authBase64.Split(Convert.ToChar(":"), 2);
         var authEmail = authSplit[0];
@@ -32,7 +32,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 
         var account = await _accountService.AuthenticateAsync(authEmail, authPassword);
         if (account == null) return AuthenticateResult.Fail("The username or password is not correct.");
-        
+
         var authenticatedUser = new AuthenticatedUser("BasicAuthentication", true, account.FirstName);
         var claims = new List<Claim>
         {
@@ -40,7 +40,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             new("LastName", account.LastName),
             new("Email", account.Email),
             new("UserId", account.Id.ToString()),
-            new(ClaimsIdentity.DefaultRoleClaimType, account.Role),
+            new(ClaimsIdentity.DefaultRoleClaimType, account.Role)
         };
 
         var claimsIdentity = new ClaimsIdentity(authenticatedUser, claims);

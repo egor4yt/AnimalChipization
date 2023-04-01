@@ -1,8 +1,12 @@
+using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.Accounts.GetById;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
+using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Core.Extensions;
 using AnimalChipization.Core.Validation;
+using AnimalChipization.Data.Entities;
+using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Account;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -16,7 +20,9 @@ public class AccountsController : ApiControllerBase
 {
     private readonly IAccountService _accountService;
 
-    public AccountsController(ILogger<AccountsController> logger, IMapper mapper, IAccountService accountService) :
+    public AccountsController(IMapper mapper,
+        IAccountService accountService,
+        ILogger<AccountsController> logger) :
         base(logger, mapper)
     {
         _accountService = accountService;
@@ -30,8 +36,10 @@ public class AccountsController : ApiControllerBase
     {
         try
         {
+            if (accountId != HttpContext.User.GetUserId() && HttpContext.User.IsInRole(AccountRole.Administrator) == false) throw new ForbiddenException($"Account with id {accountId} not found");
+            
             var account = await _accountService.GetByIdAsync(accountId);
-            if (account is null) return NotFound($"Account with id {accountId} not found");
+            if (account is null) throw new NotFoundException($"Account with id {accountId} not found");
 
             var response = Mapper.Map<GetByIdAccountsResponse>(account);
             return Ok(response);
@@ -44,7 +52,8 @@ public class AccountsController : ApiControllerBase
 
     [HttpGet("search")]
     [ProducesResponseType(typeof(IEnumerable<SearchAccountsResponseItem>), StatusCodes.Status200OK)]
-    [Authorize("AllowAnonymous")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Search([FromQuery] SearchAccountsRequests request)
     {
         try
@@ -59,7 +68,27 @@ public class AccountsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-
+    
+    [HttpPost]
+    [ProducesResponseType(typeof(CreateAccountsResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    public async Task<IActionResult> Create([FromBody] CreateAccountsRequest request)
+    {
+        try
+        {
+            var account = Mapper.Map<Account>(request);
+            await _accountService.RegisterAsync(account);
+            
+            var response = Mapper.Map<CreateAccountsResponse>(account);
+            return Created($"/accounts/{response.Id}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(typeof(UpdateAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
@@ -68,8 +97,7 @@ public class AccountsController : ApiControllerBase
     {
         try
         {
-            if (HttpContext.User.GetUserId() != accountId) return Forbid();
-
+            if (accountId != HttpContext.User.GetUserId() && HttpContext.User.IsInRole(AccountRole.Administrator) == false) throw new ForbiddenException("You can update only your account");
             var updateModel = Mapper.Map<UpdateAccountModel>(request);
             updateModel.Id = accountId;
 
@@ -91,7 +119,7 @@ public class AccountsController : ApiControllerBase
     {
         try
         {
-            if (HttpContext.User.GetUserId() != accountId) return Forbid();
+            if (HttpContext.User.GetUserId() != accountId && HttpContext.User.IsInRole(AccountRole.Administrator) == false) throw new ForbiddenException("You can delete only your account");
 
             await _accountService.DeleteAsync(accountId);
             return Ok();

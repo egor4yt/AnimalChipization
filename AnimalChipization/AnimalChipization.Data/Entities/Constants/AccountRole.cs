@@ -1,8 +1,8 @@
 namespace AnimalChipization.Data.Entities.Constants;
 
-public class AccountRole
+public static class AccountRole
 {
-    public static string Administrator = "ADMINISTRATOR";
-    public static string Chipper = "CHIPPER";
-    public static string User = "USER";
+    public const string Administrator = "ADMIN";
+    public const string Chipper = "CHIPPER";
+    public const string User = "USER";
 }

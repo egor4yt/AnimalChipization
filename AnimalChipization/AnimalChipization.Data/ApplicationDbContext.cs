@@ -27,6 +27,8 @@ public class ApplicationDbContext : DbContext
 
     private static void UpdateStructure(ModelBuilder builder)
     {
+        builder.Entity<Account>().Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
         builder.Entity<AnimalTypeAnimal>()
             .HasKey(animalTypeAnimal => new { animalTypeAnimal.AnimalId, AccountId = animalTypeAnimal.AnimalTypeId });
 
@@ -63,7 +65,7 @@ public class ApplicationDbContext : DbContext
             .HasOne(pt => pt.Location)
             .WithMany(p => p.AnimalsVisitedLocations)
             .HasForeignKey(pt => pt.LocationId);
-
+        
         builder.Entity<AnimalVisitedLocation>()
             .HasOne(pt => pt.Animal)
             .WithMany(t => t.AnimalVisitedLocations)
@@ -77,7 +79,6 @@ public class ApplicationDbContext : DbContext
             new()
             {
                 Id = 1,
-                CreatedAt = DateTime.UtcNow,
                 FirstName = "adminFirstName",
                 LastName = "adminLastName",
                 Email = "admin@simbirsoft.com",
@@ -88,7 +89,6 @@ public class ApplicationDbContext : DbContext
             new()
             {
                 Id = 2,
-                CreatedAt = DateTime.UtcNow,
                 FirstName = "chipperFirstName",
                 LastName = "chipperLastName",
                 Email = "chipper@simbirsoft.com",
@@ -99,7 +99,6 @@ public class ApplicationDbContext : DbContext
             new()
             {
                 Id = 3,
-                CreatedAt = DateTime.UtcNow,
                 FirstName = "userFirstName",
                 LastName = "userLastName",
                 Email = "user@simbirsoft.com",

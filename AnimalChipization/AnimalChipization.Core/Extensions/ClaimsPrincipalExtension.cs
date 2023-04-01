@@ -10,4 +10,9 @@ public static class ClaimsPrincipalExtension
             ? int.Parse(claimsPrincipal.Claims.First(x => x.Type == "UserId").Value)
             : 0;
     }
+    
+    public static string? GetUserRole(this ClaimsPrincipal claimsPrincipal)
+    {
+        return claimsPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultRoleClaimType)?.Value;
+    }
 }
