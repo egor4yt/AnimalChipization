@@ -3,6 +3,7 @@ using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
 using AnimalChipization.Core.Validation;
 using AnimalChipization.Data.Entities;
+using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.AnimalType;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -44,7 +45,7 @@ public class AnimalsTypesController : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateAnimalsTypesResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Create([FromBody] CreateAnimalsTypesRequest request)
     {
         try
@@ -65,7 +66,7 @@ public class AnimalsTypesController : ApiControllerBase
     [ProducesResponseType(typeof(UpdateAnimalsTypesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long animalTypeId, [FromBody] UpdateAnimalsTypesRequest request)
     {
         try
@@ -86,7 +87,7 @@ public class AnimalsTypesController : ApiControllerBase
     [HttpDelete("{animalTypeId:long}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
         try
