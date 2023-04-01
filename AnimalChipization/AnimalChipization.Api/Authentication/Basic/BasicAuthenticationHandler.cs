@@ -12,36 +12,27 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 {
     private readonly IAccountService _accountService;
 
-    public BasicAuthenticationHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock, IAccountService accountService)
-        : base(options, logger, encoder, clock)
+    public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IAccountService accountService) : base(options, logger, encoder, clock)
     {
         _accountService = accountService;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader) == false)
-            return AuthenticateResult.Fail("Authorization header is missing");
-
+        if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader) == false) return AuthenticateResult.Fail("Authorization header is missing");
         Response.Headers.Add("WWW-Authenticate", "Basic");
-
+        
         var authHeaderRegex = new Regex(@"Basic (.*)");
-        if (authHeaderRegex.IsMatch(authorizationHeader) == false)
-            return AuthenticateResult.Fail("Authorization code not formatted properly.");
-
-        var authBase64 =
-            Encoding.UTF8.GetString(Convert.FromBase64String(authHeaderRegex.Replace(authorizationHeader, "$1")));
+        if (authHeaderRegex.IsMatch(authorizationHeader.ToString()) == false) return AuthenticateResult.Fail("Authorization code not formatted properly");
+        
+        var authBase64 = Encoding.UTF8.GetString(Convert.FromBase64String(authHeaderRegex.Replace(authorizationHeader.ToString(), "$1")));
         var authSplit = authBase64.Split(Convert.ToChar(":"), 2);
         var authEmail = authSplit[0];
         var authPassword = authSplit.Length > 1 ? authSplit[1] : throw new Exception("Unable to get password");
 
         var account = await _accountService.AuthenticateAsync(authEmail, authPassword);
         if (account == null) return AuthenticateResult.Fail("The username or password is not correct.");
-
+        
         var authenticatedUser = new AuthenticatedUser("BasicAuthentication", true, account.FirstName);
         var claims = new List<Claim>
         {
@@ -50,8 +41,9 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             new("Email", account.Email),
             new("UserId", account.Id.ToString())
         };
-        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(authenticatedUser, claims));
-        // return AuthenticateResult.Fail("tt");
+
+        var claimsIdentity = new ClaimsIdentity(authenticatedUser, claims);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));
     }
 }
