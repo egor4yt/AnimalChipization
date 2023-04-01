@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ public class UpdateAccountsRequest
 
     [Required]
     public string Password { get; set; }
-    
+
     [Role(false)]
     public string Role { get; set; }
 }

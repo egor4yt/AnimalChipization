@@ -28,7 +28,8 @@ public class ContractsToEntitiesMappingConfig : Profile
             .ForMember(dest => dest.PasswordHash,
                 opt => opt.MapFrom(p => SecurityHelper.ComputeSha256Hash(p.Password)))
             .ForMember(dest => dest.Email,
-                opt => opt.MapFrom(p => p.Email.ToLower().Trim()));;
+                opt => opt.MapFrom(p => p.Email.ToLower().Trim()));
+        ;
 
         #endregion
 

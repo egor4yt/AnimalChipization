@@ -12,7 +12,6 @@ using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
-using AnimalChipization.Api.Contracts.AnimalsVisitedLocations;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
@@ -132,11 +131,11 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<AnimalVisitedLocation, UpdateAnimalsVisitedLocationsResponse>()
             .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
-        
+
         CreateMap<AnimalVisitedLocation, GetAnimalsVisitedLocationsResponseItem>()
             .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
-        
+
         #endregion
     }
 }

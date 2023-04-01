@@ -48,13 +48,12 @@ public class ContractsToServicesModelsMappingConfig : Profile
         CreateMap<ChangeAnimalTypeAnimalsRequest, ChangeAnimalTypeAnimalModel>();
 
         #endregion
-        
+
         #region AnimalsVisitedLocations
 
         CreateMap<UpdateAnimalsVisitedLocationsRequest, UpdateAnimalVisitedLocationModel>();
         CreateMap<GetAnimalsVisitedLocationsRequest, GetAnimalVisitedLocationModel>();
 
         #endregion
-        
     }
 }

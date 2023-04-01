@@ -65,13 +65,13 @@ public class ApplicationDbContext : DbContext
             .HasOne(pt => pt.Location)
             .WithMany(p => p.AnimalsVisitedLocations)
             .HasForeignKey(pt => pt.LocationId);
-        
+
         builder.Entity<AnimalVisitedLocation>()
             .HasOne(pt => pt.Animal)
             .WithMany(t => t.AnimalVisitedLocations)
             .HasForeignKey(pt => pt.AnimalId);
     }
-    
+
     private static void SeedData(ModelBuilder builder)
     {
         var accounts = new List<Account>

@@ -1,7 +1,6 @@
 using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
-using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Models.Account;
 using AnimalChipization.Services.Services.Interfaces;

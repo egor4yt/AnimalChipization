@@ -37,7 +37,7 @@ public class AccountsController : ApiControllerBase
         try
         {
             if (accountId != HttpContext.User.GetUserId() && HttpContext.User.IsInRole(AccountRole.Administrator) == false) throw new ForbiddenException($"Account with id {accountId} not found");
-            
+
             var account = await _accountService.GetByIdAsync(accountId);
             if (account is null) throw new NotFoundException($"Account with id {accountId} not found");
 
@@ -68,7 +68,7 @@ public class AccountsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(CreateAccountsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
@@ -79,7 +79,7 @@ public class AccountsController : ApiControllerBase
         {
             var account = Mapper.Map<Account>(request);
             await _accountService.RegisterAsync(account);
-            
+
             var response = Mapper.Map<CreateAccountsResponse>(account);
             return Created($"/accounts/{response.Id}", response);
         }
@@ -88,7 +88,7 @@ public class AccountsController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(typeof(UpdateAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
