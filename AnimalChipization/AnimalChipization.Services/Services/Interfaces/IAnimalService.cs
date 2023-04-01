@@ -11,6 +11,6 @@ public interface IAnimalService
     Task<Animal> UpdateAsync(UpdateAnimalModel model);
     Task<Animal> AttachAnimalTypeAsync(long animalId, long animalTypeId);
     Task<Animal> ChangeAnimalTypeAsync(ChangeAnimalTypeAnimalModel model);
-    Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId);
+    Task<Animal> DetachAnimalTypeAsync(long animalId, long animalTypeId);
     Task DeleteAsync(long animalId);
 }

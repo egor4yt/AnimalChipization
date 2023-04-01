@@ -141,7 +141,7 @@ public class AnimalService : IAnimalService
         return await _animalRepository.UpdateAsync(animal);
     }
 
-    public async Task<Animal> DeleteAnimalTypeAsync(long animalId, long animalTypeId)
+    public async Task<Animal> DetachAnimalTypeAsync(long animalId, long animalTypeId)
     {
         var animal = await _animalRepository.FirstOrDefaultFullAsync(x => x.Id == animalId);
         if (animal == null) throw new NotFoundException($"Animal with id {animalId} does not exists");
