@@ -2,6 +2,7 @@ using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 using AnimalChipization.Core.Validation;
+using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -43,7 +44,7 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [HttpPost("{pointId:long}")]
     [ProducesResponseType(typeof(AddAnimalsVisitedLocationsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Add([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long pointId)
     {
         try
@@ -61,7 +62,7 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [HttpDelete("{visitedPointId:long}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
     {
         try
@@ -78,7 +79,7 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(IEnumerable<UpdateAnimalsVisitedLocationsResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Update([GreaterThan(0L)] long animalId, [FromBody] UpdateAnimalsVisitedLocationsRequest request)
     {
         try
