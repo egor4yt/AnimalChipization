@@ -3,6 +3,7 @@ using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Core.Validation;
 using AnimalChipization.Data.Entities;
+using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Location;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
@@ -45,7 +46,7 @@ public class LocationsController : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Create([FromBody] CreateLocationsRequest request)
     {
         try
@@ -66,7 +67,7 @@ public class LocationsController : ApiControllerBase
     [ProducesResponseType(typeof(UpdateLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long pointId, [FromBody] UpdateLocationsRequest request)
     {
         try
@@ -87,7 +88,7 @@ public class LocationsController : ApiControllerBase
     [HttpDelete("{pointId:long}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("RequireAuthenticated")]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long pointId)
     {
         try
