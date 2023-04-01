@@ -5,12 +5,7 @@ public static class AppConfiguration
     private static ILogger<WebApplication> _logger = null!;
 
     /* Default values */
-    private static string _databaseConnectionString =
-        "host=localhost;port=5432;database=development-animal-chipization;username=user;password=password";
-
-
-    public static string DatabaseConnectionString => _databaseConnectionString;
-
+    public static string DatabaseConnectionString { get; private set; } = "host=localhost;port=5432;database=animal-chipization;username=db;password=db";
 
     public static void UpdateEnvironmentVariables(this WebApplication app)
     {
@@ -18,13 +13,14 @@ public static class AppConfiguration
 
         _logger = app.Services.GetRequiredService<ILogger<WebApplication>>();
 
-        TryUpdateVariable(ref _databaseConnectionString, "DATABASE_CONNECTION_STRING");
+        DatabaseConnectionString = TryUpdateVariable(DatabaseConnectionString, "DATABASE_CONNECTION_STRING");
     }
 
-    private static void TryUpdateVariable(ref string variable, string name)
+    private static string TryUpdateVariable(string variable, string name)
     {
-        var value = Environment.GetEnvironmentVariable(name);
-        if (string.IsNullOrWhiteSpace(value)) _logger.LogWarning("Environment variable {name} not set", name);
-        else variable = value;
+        var defaultValue = variable;
+        var environmentValue = Environment.GetEnvironmentVariable(name);
+        if (string.IsNullOrWhiteSpace(environmentValue)) _logger.LogWarning("Environment variable {name} not set", name);
+        return environmentValue ?? defaultValue;
     }
 }

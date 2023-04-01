@@ -2,8 +2,6 @@ using AnimalChipization.Api.Configuration;
 using AnimalChipization.Data;
 using Microsoft.EntityFrameworkCore;
 
-var now = DateTime.UtcNow;
-
 var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureBuilder();
 

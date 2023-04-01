@@ -14,7 +14,6 @@ public class
             return Task.CompletedTask;
         }
 
-//
         switch (context.User.Identity?.IsAuthenticated)
         {
             case true:

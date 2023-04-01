@@ -30,9 +30,7 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
         {
             options.AddPolicy("AllowAnonymous", x => x.AddRequirements(new CustomAllowAnonymousAuthorizationRequirement(true)).Build());
-
-            options.AddPolicy("RequireAuthenticated",
-                new AuthorizationPolicyBuilder("BasicAuthentication").AddRequirements(new CustomAllowAnonymousAuthorizationRequirement(false)).Build());
+            options.AddPolicy("RequireAuthenticated", new AuthorizationPolicyBuilder("BasicAuthentication").AddRequirements(new CustomAllowAnonymousAuthorizationRequirement(false)).Build());
         });
 
         services.AddSingleton<IAuthorizationHandler, CustomAllowAnonymousAuthorizationHandler>();
