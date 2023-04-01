@@ -1,4 +1,4 @@
-dotnet ef migrations add AccountAddedDefaultCreatedAt --project AnimalChipization.Data --startup-project AnimalChipization.Api
+dotnet ef migrations add EntityBaseUpdated --project AnimalChipization.Data --startup-project AnimalChipization.Api
 
 dotnet ef database update --project AnimalChipization.Data --startup-project AnimalChipization.Api
 
