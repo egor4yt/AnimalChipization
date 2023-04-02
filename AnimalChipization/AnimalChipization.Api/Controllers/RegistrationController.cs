@@ -16,7 +16,7 @@ public class RegistrationController : ApiControllerBase
 
     public RegistrationController(IMapper mapper,
         IAccountService accountService,
-        ILogger<AccountsController> logger) : base(logger, mapper)
+        ILogger<RegistrationController> logger) : base(logger, mapper)
     {
         _accountService = accountService;
     }

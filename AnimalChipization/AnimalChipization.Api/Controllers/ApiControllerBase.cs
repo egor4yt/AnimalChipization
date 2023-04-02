@@ -23,8 +23,8 @@ public abstract class ApiControllerBase : ControllerBase
 
     protected IActionResult ExceptionResult(Exception exception)
     {
-        if (exception is AggregateException aggregateException)
-            foreach (var innerException in aggregateException.InnerExceptions)
+        if (exception is AggregateException aggregateEx)
+            foreach (var innerException in aggregateEx.InnerExceptions)
                 Logger.LogError(innerException.Message, innerException);
         else
             Logger.LogError(exception.Message, exception);
@@ -32,7 +32,8 @@ public abstract class ApiControllerBase : ControllerBase
         return exception switch
         {
             IApiException apiException => StatusCode((int)apiException.HttpStatusCode, apiException.ApiMessage),
-            _ => StatusCode((int)HttpStatusCode.BadRequest, "Something went wrong")
+            AggregateException aggregateException => StatusCode((int)HttpStatusCode.BadRequest, $"Something went wrong.\n{string.Join("\n", aggregateException?.InnerExceptions.Select(x=>x.Message) ?? Array.Empty<string>()).ToList()}"),
+            _ => StatusCode((int)HttpStatusCode.BadRequest, $"Something went wrong: {exception.Message}")
         };
     }
 }

@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using AnimalChipization.Data.Entities.Constants;
 
-namespace AnimalChipization.Core.Validation;
+namespace AnimalChipization.Api.Contracts.Validation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class GenderAttribute : ValidationAttribute
+public class RoleAttribute : ValidationAttribute
 {
-    public GenderAttribute(bool allowNull) : base("Gender has invalid value")
+    public RoleAttribute(bool allowNull) : base("Role has invalid value")
     {
         AllowNull = allowNull;
     }
@@ -16,7 +17,7 @@ public class GenderAttribute : ValidationAttribute
     {
         return value?.ToString() switch
         {
-            "MALE" or "FEMALE" or "OTHER" => true,
+            AccountRole.Administrator or AccountRole.Chipper or AccountRole.User => true,
             null => AllowNull,
             _ => false
         };

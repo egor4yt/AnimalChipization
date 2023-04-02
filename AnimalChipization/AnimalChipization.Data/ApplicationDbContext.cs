@@ -17,11 +17,15 @@ public class ApplicationDbContext : DbContext
     public DbSet<Animal> Animals { get; set; }
     public DbSet<AnimalTypeAnimal> AnimalTypesAnimals { get; set; }
     public DbSet<AnimalVisitedLocation> AnimalsVisitedLocations { get; set; }
+    public DbSet<Area> Areas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasPostgresExtension("postgis");
+        
         UpdateStructure(builder);
         SeedData(builder);
+        
         base.OnModelCreating(builder);
     }
 

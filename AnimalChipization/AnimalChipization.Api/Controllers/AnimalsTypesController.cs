@@ -1,7 +1,7 @@
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.GetById;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
-using AnimalChipization.Core.Validation;
+using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.AnimalType;
@@ -17,7 +17,7 @@ public class AnimalsTypesController : ApiControllerBase
 {
     private readonly IAnimalTypeService _animalTypeService;
 
-    public AnimalsTypesController(ILogger<ApiControllerBase> logger, IMapper mapper, IAnimalTypeService animalTypeService) : base(logger, mapper)
+    public AnimalsTypesController(ILogger<AnimalsTypesController> logger, IMapper mapper, IAnimalTypeService animalTypeService) : base(logger, mapper)
     {
         _animalTypeService = animalTypeService;
     }

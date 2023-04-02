@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using AnimalChipization.Core.Validation;
+using AnimalChipization.Api.Contracts.Validation;
 
 namespace AnimalChipization.Api.Contracts.Accounts.Create;
 

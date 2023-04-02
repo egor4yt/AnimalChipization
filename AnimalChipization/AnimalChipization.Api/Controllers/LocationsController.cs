@@ -1,7 +1,7 @@
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
-using AnimalChipization.Core.Validation;
+using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Location;
@@ -17,7 +17,7 @@ public class LocationsController : ApiControllerBase
 {
     private readonly ILocationService _locationService;
 
-    public LocationsController(ILogger<ApiControllerBase> logger, IMapper mapper, ILocationService locationService) :
+    public LocationsController(ILogger<LocationsController> logger, IMapper mapper, ILocationService locationService) :
         base(logger, mapper)
     {
         _locationService = locationService;

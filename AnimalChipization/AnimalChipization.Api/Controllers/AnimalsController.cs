@@ -5,7 +5,7 @@ using AnimalChipization.Api.Contracts.Animals.DeleteAnimalType;
 using AnimalChipization.Api.Contracts.Animals.GetById;
 using AnimalChipization.Api.Contracts.Animals.Search;
 using AnimalChipization.Api.Contracts.Animals.Update;
-using AnimalChipization.Core.Validation;
+using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Services.Interfaces;
@@ -20,7 +20,7 @@ public class AnimalsController : ApiControllerBase
 {
     private readonly IAnimalService _animalService;
 
-    public AnimalsController(ILogger<ApiControllerBase> logger, IMapper mapper, IAnimalService animalService) : base(logger, mapper)
+    public AnimalsController(ILogger<AnimalsController> logger, IMapper mapper, IAnimalService animalService) : base(logger, mapper)
     {
         _animalService = animalService;
     }

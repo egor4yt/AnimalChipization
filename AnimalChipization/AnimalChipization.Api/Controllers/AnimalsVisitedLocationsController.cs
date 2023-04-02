@@ -1,7 +1,7 @@
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
-using AnimalChipization.Core.Validation;
+using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Services.Interfaces;
@@ -16,7 +16,7 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
 {
     private readonly IAnimalVisitedLocationService _animalVisitedLocationService;
 
-    public AnimalsVisitedLocationsController(ILogger<ApiControllerBase> logger, IMapper mapper, IAnimalVisitedLocationService animalVisitedLocationService) : base(logger, mapper)
+    public AnimalsVisitedLocationsController(ILogger<AnimalsVisitedLocationsController> logger, IMapper mapper, IAnimalVisitedLocationService animalVisitedLocationService) : base(logger, mapper)
     {
         _animalVisitedLocationService = animalVisitedLocationService;
     }

@@ -71,7 +71,7 @@ public static class DependencyInjection
 
     private static void ConfigureRepositories(IServiceCollection services)
     {
-        services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(AppConfiguration.DatabaseConnectionString));
+        services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(AppConfiguration.DatabaseConnectionString, y => y.UseNetTopologySuite()));
         var repositoriesAssembly = typeof(Data.AssemblyRunner).Assembly;
         services.RegisterServicesEndsWith("Repository", repositoriesAssembly);
     }

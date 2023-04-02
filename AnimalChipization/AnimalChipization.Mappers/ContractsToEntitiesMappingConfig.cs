@@ -1,10 +1,13 @@
 using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
+using AnimalChipization.Api.Contracts.Areas.Create;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
+using NetTopologySuite.Geometries;
+using Location = AnimalChipization.Data.Entities.Location;
 
 namespace AnimalChipization.Mappers;
 
@@ -42,6 +45,13 @@ public class ContractsToEntitiesMappingConfig : Profile
         #region AnimalsTypes
 
         CreateMap<CreateAnimalsTypesRequest, AnimalType>();
+
+        #endregion
+
+        #region Areas
+
+        CreateMap<CreateAreasRequest, Area>()
+            .ForMember(x=>x.AreaPoints, p=>p.Ignore());
 
         #endregion
     }

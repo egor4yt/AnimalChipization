@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AnimalChipization.Core.Validation;
+namespace AnimalChipization.Api.Contracts.Validation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class LifeStatusAttribute : ValidationAttribute
+public class GenderAttribute : ValidationAttribute
 {
-    public LifeStatusAttribute(bool allowNull) : base("Life status has invalid value")
+    public GenderAttribute(bool allowNull) : base("Gender has invalid value")
     {
         AllowNull = allowNull;
     }
@@ -16,7 +16,7 @@ public class LifeStatusAttribute : ValidationAttribute
     {
         return value?.ToString() switch
         {
-            "ALIVE" or "DEAD" => true,
+            "MALE" or "FEMALE" or "OTHER" => true,
             null => AllowNull,
             _ => false
         };

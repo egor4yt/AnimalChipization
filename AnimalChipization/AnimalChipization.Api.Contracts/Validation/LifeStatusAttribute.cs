@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AnimalChipization.Core.Validation;
+namespace AnimalChipization.Api.Contracts.Validation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class RoleAttribute : ValidationAttribute
+public class LifeStatusAttribute : ValidationAttribute
 {
-    public RoleAttribute(bool allowNull) : base("Role has invalid value")
+    public LifeStatusAttribute(bool allowNull) : base("Life status has invalid value")
     {
         AllowNull = allowNull;
     }
@@ -16,7 +16,7 @@ public class RoleAttribute : ValidationAttribute
     {
         return value?.ToString() switch
         {
-            "ADMIN" or "CHIPPER" or "USER" => true,
+            "ALIVE" or "DEAD" => true,
             null => AllowNull,
             _ => false
         };

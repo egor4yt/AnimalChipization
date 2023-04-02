@@ -1,7 +1,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
-namespace AnimalChipization.Core.Validation;
+namespace AnimalChipization.Api.Contracts.Validation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class AllElementsUniqueAttribute : ValidationAttribute

@@ -15,10 +15,13 @@ using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Add;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
+using AnimalChipization.Api.Contracts.Areas.Create;
+using AnimalChipization.Api.Contracts.Areas.GetById;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Api.Contracts.Registration.Post;
+using AnimalChipization.Api.Contracts.Shared;
 using AnimalChipization.Core.Extensions;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
@@ -136,6 +139,24 @@ public class EntitiesToContractsMappingConfig : Profile
             .ForMember(x => x.DateTimeOfVisitLocationPoint, opt => opt.MapFrom(p => p.CreatedAt.ToIso8601String()))
             .ForMember(x => x.LocationPointId, opt => opt.MapFrom(p => p.LocationId));
 
+        #endregion
+
+        #region Areas
+
+        CreateMap<Area, CreateAreasResponse>()
+            .ForMember(x => x.AreaPoints, p =>
+                p.MapFrom(x =>
+                    x.AreaPoints.Coordinates
+                        .SkipLast(1)
+                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
+
+        CreateMap<Area, GetByIdAreasResponse>()
+            .ForMember(x => x.AreaPoints, p =>
+                p.MapFrom(x =>
+                    x.AreaPoints.Coordinates
+                        .SkipLast(1)
+                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
+        
         #endregion
     }
 }
