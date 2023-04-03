@@ -23,6 +23,7 @@ public class CoordinatesCollectionAttribute : ValidationAttribute
         allValid = allValid && listOfObjects.Select(x => x.Latitude).Distinct().Count() != 1;
         allValid = allValid && listOfObjects.Select(x => x.Longitude).Distinct().Count() != 1;
         allValid = allValid && listOfObjects.DistinctBy(x => new { x.Latitude, x.Longitude }).Count() == listOfObjects.Count;
+        // todo: проверять что фигура не пересекает сама себя
 
         return allValid;
     }

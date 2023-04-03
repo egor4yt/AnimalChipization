@@ -5,7 +5,7 @@ public static class AppConfiguration
     private static ILogger<WebApplication> _logger = null!;
 
     /* Default values */
-    public static string DatabaseConnectionString { get; private set; } = "host=localhost;port=1111;database=animal-chipization;username=postgres;password=postgres";
+    public static string DatabaseConnectionString { get; private set; } = "host=localhost;port=2222;database=animal-chipization;username=postgres;password=postgres";
 
     public static void UpdateEnvironmentVariables(this WebApplication app)
     {

@@ -55,6 +55,7 @@ public class AreasController : ApiControllerBase
         try
         {
             var area = Mapper.Map<Area>(request);
+            // todo: move  creating polygon in auto mapper configs
             var pointsForPolygon = request.AreaPoints.Select(areaPoint => new Coordinate(areaPoint.Latitude, areaPoint.Longitude)).ToList();
             pointsForPolygon.Add(pointsForPolygon[0]);
 
@@ -65,6 +66,24 @@ public class AreasController : ApiControllerBase
 
             var response = Mapper.Map<CreateAreasResponse>(area);
             return Created($"/areas/{response.Id}", response);
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+
+    [HttpDelete("{areaId:long}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    public async Task<IActionResult> Create([FromRoute] [GreaterThan(0L)] long areaId)
+    {
+        try
+        {
+            await _areaService.DeleteAsync(areaId);
+            return Ok();
         }
         catch (Exception e)
         {

@@ -6,4 +6,5 @@ public interface IAreaService
 {
     Task<Area?> GetByIdAsync(long areaId);
     Task CreateAsync(Area area);
+    Task DeleteAsync(long areaId);
 }
