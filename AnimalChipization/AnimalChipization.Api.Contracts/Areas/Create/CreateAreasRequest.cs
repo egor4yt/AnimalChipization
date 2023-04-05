@@ -10,6 +10,6 @@ public class CreateAreasRequest
     public string Name { get; set; }
 
     [Required]
-    [CoordinatesCollection]
+    [PolygonCoordinatesCollection]
     public List<CoordinatesRequestItem> AreaPoints { get; set; }
 }

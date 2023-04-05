@@ -2,6 +2,7 @@ using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Services.Interfaces;
+using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Services.Services;
 
@@ -22,10 +23,13 @@ public class AreaService : IAreaService
     public async Task CreateAsync(Area area)
     {
         if (area == null) throw new BadRequestException("Area was null");
-        var exists = await _areaRepository.ExistsAsync(x => x.AreaPoints.Within(area.AreaPoints) || x.AreaPoints.Contains(area.AreaPoints) || x.AreaPoints.Intersects(area.AreaPoints));
-        // if (exists) throw new BadRequestException("New area should not intersect with old areas");
-        
-        // все кто intersect нужно получать и на стороне .NET прочекать там просто пересечение, или прям вход в зону. если просто пересечение, то можно создать
+        var exists = await _areaRepository.ExistsAsync(x => x.AreaPoints.Within(area.AreaPoints) || x.AreaPoints.Contains(area.AreaPoints));
+        if (exists) throw new BadRequestException("New area should not intersect with old areas");
+
+        var intersectedAreas = await _areaRepository.FindAllAsync(x => x.AreaPoints.Intersects(area.AreaPoints));
+        var geometries = intersectedAreas.Select(x => x.AreaPoints.Intersection(area.AreaPoints)).ToList();
+        var bad = geometries.FirstOrDefault(x => x is Polygon);
+        if (geometries.Any(x=> x is Polygon)) throw new BadRequestException("New area should not intersect with old areas");
         
         await _areaRepository.InsertAsync(area);
     }

@@ -66,12 +66,20 @@ public static class DependencyInjection
         });
 
         var mapper = mappingConfig.CreateMapper();
-        services.AddSingleton(mapper);
+        services.AddSingleton(mapper); 
     }
 
     private static void ConfigureRepositories(IServiceCollection services)
     {
-        services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(AppConfiguration.DatabaseConnectionString, y => y.UseNetTopologySuite()));
+        services.AddDbContext<ApplicationDbContext>(x =>
+            x.UseNpgsql(AppConfiguration.DatabaseConnectionString, options =>
+            {
+                options.UseNetTopologySuite();
+                options.EnableRetryOnFailure(
+                    5,
+                    TimeSpan.FromSeconds(15),
+                    null);
+            }));
         var repositoriesAssembly = typeof(Data.AssemblyRunner).Assembly;
         services.RegisterServicesEndsWith("Repository", repositoriesAssembly);
     }
