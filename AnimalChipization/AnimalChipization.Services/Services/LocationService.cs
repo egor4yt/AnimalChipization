@@ -25,9 +25,9 @@ public class LocationService : ILocationService
         if (location == null) throw new BadRequestException("Location was null");
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
-            Math.Abs(x.Longitude - location.Longitude) < 0.0001
-            && Math.Abs(x.Latitude - location.Latitude) < 0.0001);
-        if (locationExists) throw new ConflictException($"Location with longitude: {location.Longitude} and latitude: {location.Latitude} already exists");
+            Math.Abs(x.Point.X - location.Point.X) < 0.0001
+            && Math.Abs(x.Point.Y - location.Point.Y) < 0.0001);
+        if (locationExists) throw new ConflictException($"Location with longitude: {location.Point.X} and latitude: {location.Point.Y} already exists");
 
         await _locationRepository.InsertAsync(location);
     }
@@ -38,14 +38,13 @@ public class LocationService : ILocationService
         if (location == null) throw new NotFoundException($"Location with id {model.Id} does not exists");
 
         var locationExists = await _locationRepository.ExistsAsync(x =>
-            Math.Abs(x.Longitude - model.Longitude) < 0.01
-            && Math.Abs(x.Latitude - model.Latitude) < 0.01
+            Math.Abs(x.Point.X - model.Point.X) < 0.01
+            && Math.Abs(x.Point.Y - model.Point.Y) < 0.01
             && x.Id != model.Id
         );
-        if (locationExists) throw new ConflictException($"Location with longitude: {model.Longitude} and latitude: {model.Latitude} already exists");
+        if (locationExists) throw new ConflictException($"Location with longitude: {model.Point.X} and latitude: {model.Point.Y} already exists");
 
-        location.Longitude = model.Longitude;
-        location.Latitude = model.Latitude;
+        location.Point = model.Point;
 
         return await _locationRepository.UpdateAsync(location);
     }

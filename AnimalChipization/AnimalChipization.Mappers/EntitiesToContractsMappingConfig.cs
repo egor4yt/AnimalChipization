@@ -45,9 +45,17 @@ public class EntitiesToContractsMappingConfig : Profile
 
         #region Location
 
-        CreateMap<Location, GetByIdLocationsResponse>();
-        CreateMap<Location, CreateLocationsResponse>();
-        CreateMap<Location, UpdateLocationsResponse>();
+        CreateMap<Location, GetByIdLocationsResponse>()
+            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
+            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
+        
+        CreateMap<Location, CreateLocationsResponse>()
+            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
+            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
+        
+        CreateMap<Location, UpdateLocationsResponse>()
+            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
+            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
 
         #endregion
 
@@ -157,7 +165,7 @@ public class EntitiesToContractsMappingConfig : Profile
                     x.AreaPoints.Coordinates
                         .SkipLast(1)
                         .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
-        
+
         CreateMap<Area, UpdateAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
                 p.MapFrom(x =>

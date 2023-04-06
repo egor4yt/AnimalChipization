@@ -25,9 +25,9 @@ public abstract class ApiControllerBase : ControllerBase
     {
         if (exception is AggregateException aggregateEx)
             foreach (var innerException in aggregateEx.InnerExceptions)
-                Logger.LogError(innerException.Message, innerException);
+                Logger.LogError(innerException, "Something went wrong: {Message}", innerException.Message);
         else
-            Logger.LogError(exception.Message, exception);
+            Logger.LogError(exception, "Something went wrong: {Message}", exception.Message);
 
         return exception switch
         {
@@ -36,16 +36,12 @@ public abstract class ApiControllerBase : ControllerBase
         };
     }
 
-    private string GetErrorMessage(Exception exception)
+    private static string GetErrorMessage(Exception exception)
     {
-        if (exception is AggregateException aggregateEx)
-        {
-            var msg = "";
-            foreach (var innerException in aggregateEx.InnerExceptions)
-                msg += $"{innerException.Message}\nStack trace: {innerException.StackTrace}\n";
-            return msg;
-        }
-
-        return $"{exception.Message}\nStack trace: {exception.StackTrace}";
+        if (exception is not AggregateException aggregateEx) return $"{exception.Message}\nStack trace: {exception.StackTrace}";
+        var msg = "";
+        foreach (var innerException in aggregateEx.InnerExceptions)
+            msg += GetErrorMessage(innerException);
+        return msg;
     }
 }

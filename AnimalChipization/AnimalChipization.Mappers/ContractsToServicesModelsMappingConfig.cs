@@ -16,6 +16,7 @@ using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Models.Area;
 using AnimalChipization.Services.Models.Location;
 using AutoMapper;
+using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Mappers;
 
@@ -32,7 +33,9 @@ public class ContractsToServicesModelsMappingConfig : Profile
 
         #region Locations
 
-        CreateMap<UpdateLocationsRequest, UpdateLocationModel>();
+        CreateMap<UpdateLocationsRequest, UpdateLocationModel>()
+            .ForMember(x => x.Point, p =>
+                p.MapFrom(x => new Point(x.Latitude, x.Longitude)));
 
         #endregion
 
