@@ -59,7 +59,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
@@ -140,7 +140,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasIndex("ChippingLocationId");
 
-                    b.ToTable("Animals");
+                    b.ToTable("Animals", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalType", b =>
@@ -160,7 +160,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnimalsTypes");
+                    b.ToTable("AnimalsTypes", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalTypeAnimal", b =>
@@ -180,7 +180,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasIndex("AnimalTypeId");
 
-                    b.ToTable("AnimalTypesAnimals");
+                    b.ToTable("AnimalTypesAnimals", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.AnimalVisitedLocation", b =>
@@ -206,7 +206,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("AnimalsVisitedLocations");
+                    b.ToTable("AnimalsVisitedLocations", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.Area", b =>
@@ -230,7 +230,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Areas");
+                    b.ToTable("Areas", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.Location", b =>
@@ -252,7 +252,7 @@ namespace AnimalChipization.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("AnimalChipization.Data.Entities.Animal", b =>

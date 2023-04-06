@@ -35,7 +35,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> match)
     {
-        return await DbSet.AnyAsync(match);
+        return await DbSet.AsNoTracking().AnyAsync(match);
     }
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entityToUpdate)
@@ -51,7 +51,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     public async Task<List<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match)
     {
-        return await DbSet.Where(match).ToListAsync();
+        return await DbSet.Where(match).AsNoTracking().ToListAsync();
     }
 
     public async Task DeleteAsync(TEntity entity)

@@ -1,6 +1,7 @@
 using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.Areas.Create;
+using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Core.Helpers;
@@ -51,6 +52,9 @@ public class ContractsToEntitiesMappingConfig : Profile
         #region Areas
 
         CreateMap<CreateAreasRequest, Area>()
+            .ForMember(x=>x.AreaPoints, p=>p.Ignore());
+
+        CreateMap<UpdateAreasRequest, Area>()
             .ForMember(x=>x.AreaPoints, p=>p.Ignore());
 
         #endregion

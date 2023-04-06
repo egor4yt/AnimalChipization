@@ -76,8 +76,8 @@ public static class DependencyInjection
             {
                 options.UseNetTopologySuite();
                 options.EnableRetryOnFailure(
-                    5,
-                    TimeSpan.FromSeconds(15),
+                    8,
+                    TimeSpan.FromSeconds(10),
                     null);
             }));
         var repositoriesAssembly = typeof(Data.AssemblyRunner).Assembly;

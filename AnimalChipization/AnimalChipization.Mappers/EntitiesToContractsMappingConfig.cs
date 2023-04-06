@@ -17,6 +17,7 @@ using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 using AnimalChipization.Api.Contracts.Areas.Create;
 using AnimalChipization.Api.Contracts.Areas.GetById;
+using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
@@ -157,6 +158,13 @@ public class EntitiesToContractsMappingConfig : Profile
                         .SkipLast(1)
                         .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
         
+        CreateMap<Area, UpdateAreasResponse>()
+            .ForMember(x => x.AreaPoints, p =>
+                p.MapFrom(x =>
+                    x.AreaPoints.Coordinates
+                        .SkipLast(1)
+                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
+
         #endregion
     }
 }

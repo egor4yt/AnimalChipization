@@ -1,6 +1,7 @@
 using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.Areas.Create;
 using AnimalChipization.Api.Contracts.Areas.GetById;
+using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Data.Entities;
@@ -84,6 +85,35 @@ public class AreasController : ApiControllerBase
         {
             await _areaService.DeleteAsync(areaId);
             return Ok();
+        }
+        catch (Exception e)
+        {
+            return ExceptionResult(e);
+        }
+    }
+    
+    [HttpPut("{areaId:long}")]
+    [ProducesResponseType(typeof(UpdateAreasResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long areaId,[FromBody] UpdateAreasRequest request)
+    {
+        try
+        {
+            var area = Mapper.Map<Area>(request);
+            area.Id = areaId;
+            // todo: move  creating polygon in auto mapper configs
+            var pointsForPolygon = request.AreaPoints.Select(areaPoint => new Coordinate(areaPoint.Latitude, areaPoint.Longitude)).ToList();
+            pointsForPolygon.Add(pointsForPolygon[0]);
+
+            var linearRing = new LinearRing(pointsForPolygon.ToArray());
+            area.AreaPoints = new Polygon(linearRing);
+
+            await _areaService.CreateAsync(area);
+
+            var response = Mapper.Map<UpdateAreasResponse>(area);
+            return Ok(response);
         }
         catch (Exception e)
         {
