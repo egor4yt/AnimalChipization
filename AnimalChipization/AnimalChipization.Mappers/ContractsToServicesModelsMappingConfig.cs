@@ -7,11 +7,13 @@ using AnimalChipization.Api.Contracts.Animals.Update;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Update;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Get;
 using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
+using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Services.Models.Account;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Models.AnimalType;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
+using AnimalChipization.Services.Models.Area;
 using AnimalChipization.Services.Models.Location;
 using AutoMapper;
 
@@ -53,6 +55,13 @@ public class ContractsToServicesModelsMappingConfig : Profile
 
         CreateMap<UpdateAnimalsVisitedLocationsRequest, UpdateAnimalVisitedLocationModel>();
         CreateMap<GetAnimalsVisitedLocationsRequest, GetAnimalVisitedLocationModel>();
+
+        #endregion
+
+        #region Areas
+
+        CreateMap<UpdateAreasRequest, UpdateAreaModel>()
+            .ForMember(x => x.AreaPoints, p => p.Ignore());
 
         #endregion
     }

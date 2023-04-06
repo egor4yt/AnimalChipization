@@ -54,9 +54,6 @@ public class ContractsToEntitiesMappingConfig : Profile
         CreateMap<CreateAreasRequest, Area>()
             .ForMember(x=>x.AreaPoints, p=>p.Ignore());
 
-        CreateMap<UpdateAreasRequest, Area>()
-            .ForMember(x=>x.AreaPoints, p=>p.Ignore());
-
         #endregion
     }
 }

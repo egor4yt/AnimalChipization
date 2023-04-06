@@ -46,17 +46,20 @@ public class AreaService : IAreaService
         var area = await _areaRepository.FirstOrDefaultFullAsync(x => x.Id == model.Id);
         if (area == null) throw new BadRequestException($"Area with id {model.Id} does not exists");
         area.AreaPoints = model.AreaPoints;
-        
-        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id
-            && (x.AreaPoints.Within(model.AreaPoints)
-                || x.AreaPoints.Contains(model.AreaPoints)));
-        
-        if (exists) throw new BadRequestException("Updating area should not intersect with other areas");
-        
+
+        var intersects = await _areaRepository.ExistsAsync(x => x.Id != model.Id
+                                                                && (x.AreaPoints.Within(model.AreaPoints)
+                                                                    || x.AreaPoints.Contains(model.AreaPoints)));
+
+        if (intersects) throw new BadRequestException("Updating area should not intersect with other areas");
+
         var intersectedAreas = await _areaRepository.FindAllAsync(x => x.Id != model.Id && x.AreaPoints.Intersects(area.AreaPoints));
         var geometries = intersectedAreas.Select(x => x.AreaPoints.Intersection(area.AreaPoints)).ToList();
         if (geometries.Any(x => x is Polygon)) throw new BadRequestException("Updating area should not intersect with other areas");
-        
+
+        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id && x.Name == model.Name);  // todo: Зона, состоящая из таких точек, уже существует. (При этом важен порядок, в котором указаны точки, но не важна начальная точка).
+        if (exists) throw new ConflictException("Similar area already exists");
+
         return await _areaRepository.UpdateAsync(area);
     }
 }
