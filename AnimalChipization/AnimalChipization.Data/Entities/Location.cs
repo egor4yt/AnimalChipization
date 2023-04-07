@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Data.Entities;

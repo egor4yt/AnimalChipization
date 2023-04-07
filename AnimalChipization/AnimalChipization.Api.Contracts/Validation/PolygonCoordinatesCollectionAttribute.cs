@@ -39,10 +39,10 @@ public class PolygonCoordinatesCollectionAttribute : ValidationAttribute
         {
             var prevLine = storedLines.LastOrDefault();
             var line = new LineString(new[] { coordinates[i], coordinates[i + 1] });
-            
+
             if (prevLine?.EndPoint.Equals(line.StartPoint) == false) return true;
             if (storedLines.Any(x => LinesIntersects(x, line))) return true;
-            
+
             storedLines.Add(line);
         }
 

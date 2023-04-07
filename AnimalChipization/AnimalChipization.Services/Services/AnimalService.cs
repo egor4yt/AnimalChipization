@@ -1,4 +1,3 @@
-using System.Text.Json;
 using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;

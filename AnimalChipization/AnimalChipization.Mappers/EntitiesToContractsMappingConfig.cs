@@ -48,11 +48,11 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Location, GetByIdLocationsResponse>()
             .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
             .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
-        
+
         CreateMap<Location, CreateLocationsResponse>()
             .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
             .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
-        
+
         CreateMap<Location, UpdateLocationsResponse>()
             .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
             .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));

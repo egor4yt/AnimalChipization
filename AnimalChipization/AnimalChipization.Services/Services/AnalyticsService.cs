@@ -82,7 +82,6 @@ public class AnalyticsService : IAnalyticsService
                 animalsAnalytics.ForEach(x => x.AnimalsArrived++);
             }
 
-
             if (firstIndexOutsideArea != -1
                 && firstIndexInsideArea != -1
                 && firstIndexOutsideArea > firstIndexInsideArea)

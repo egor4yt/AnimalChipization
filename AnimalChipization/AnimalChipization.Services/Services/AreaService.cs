@@ -57,7 +57,7 @@ public class AreaService : IAreaService
         var geometries = intersectedAreas.Select(x => x.AreaPoints.Intersection(area.AreaPoints)).ToList();
         if (geometries.Any(x => x is Polygon)) throw new BadRequestException("Updating area should not intersect with other areas");
 
-        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id && x.Name == model.Name);  // todo: Зона, состоящая из таких точек, уже существует. (При этом важен порядок, в котором указаны точки, но не важна начальная точка).
+        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id && x.Name == model.Name); // todo: Зона, состоящая из таких точек, уже существует. (При этом важен порядок, в котором указаны точки, но не важна начальная точка).
         if (exists) throw new ConflictException("Similar area already exists");
 
         return await _areaRepository.UpdateAsync(area);

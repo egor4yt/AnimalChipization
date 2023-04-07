@@ -92,13 +92,13 @@ public class AreasController : ApiControllerBase
             return ExceptionResult(e);
         }
     }
-    
+
     [HttpPut("{areaId:long}")]
     [ProducesResponseType(typeof(UpdateAreasResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
-    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long areaId,[FromBody] UpdateAreasRequest request)
+    public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long areaId, [FromBody] UpdateAreasRequest request)
     {
         try
         {

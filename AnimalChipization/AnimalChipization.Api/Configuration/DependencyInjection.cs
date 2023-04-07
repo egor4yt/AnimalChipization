@@ -67,7 +67,7 @@ public static class DependencyInjection
         });
 
         var mapper = mappingConfig.CreateMapper();
-        services.AddSingleton(mapper); 
+        services.AddSingleton(mapper);
     }
 
     private static void ConfigureRepositories(IServiceCollection services)

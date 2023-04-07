@@ -1,5 +1,4 @@
 using AnimalChipization.Api.Contracts.Analytics.Get;
-using AnimalChipization.Core.Exceptions;
 using AnimalChipization.Services.Models.Analytics;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
