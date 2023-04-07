@@ -11,9 +11,4 @@ public class AreaRepository : RepositoryBase<Area>, IAreaRepository
     {
     }
 
-    public async Task<Area?> FirstOrDefaultFullAsync(Expression<Func<Area, bool>> match)
-    {
-        return await DbSet
-            .FirstOrDefaultAsync(match);
-    }
 }

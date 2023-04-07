@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AnimalChipization.Data.Repositories;
 

@@ -18,7 +18,7 @@ public class AreaService : IAreaService
 
     public async Task<Area?> GetByIdAsync(long areaId)
     {
-        return await _areaRepository.FirstOrDefaultFullAsync(x => x.Id == areaId);
+        return await _areaRepository.FindFirstOrDefaultAsync(x => x.Id == areaId);
     }
 
     public async Task CreateAsync(Area area)
@@ -36,14 +36,14 @@ public class AreaService : IAreaService
 
     public async Task DeleteAsync(long areaId)
     {
-        var area = await _areaRepository.FirstOrDefaultFullAsync(x => x.Id == areaId);
+        var area = await _areaRepository.FindFirstOrDefaultAsync(x => x.Id == areaId);
         if (area == null) throw new NotFoundException($"Area with id {areaId} does not exists");
         await _areaRepository.DeleteAsync(area);
     }
 
     public async Task<Area> UpdateAsync(UpdateAreaModel model)
     {
-        var area = await _areaRepository.FirstOrDefaultFullAsync(x => x.Id == model.Id);
+        var area = await _areaRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (area == null) throw new BadRequestException($"Area with id {model.Id} does not exists");
         area.AreaPoints = model.AreaPoints;
 

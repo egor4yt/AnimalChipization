@@ -1,5 +1,7 @@
+using System.Globalization;
 using AnimalChipization.Api.Contracts.Accounts.Search;
 using AnimalChipization.Api.Contracts.Accounts.Update;
+using AnimalChipization.Api.Contracts.Analytics.Get;
 using AnimalChipization.Api.Contracts.Animals.ChangeAnimalTypeAnimals;
 using AnimalChipization.Api.Contracts.Animals.Create;
 using AnimalChipization.Api.Contracts.Animals.Search;
@@ -10,6 +12,7 @@ using AnimalChipization.Api.Contracts.AnimalsVisitedLocations.Update;
 using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Services.Models.Account;
+using AnimalChipization.Services.Models.Analytics;
 using AnimalChipization.Services.Models.Animal;
 using AnimalChipization.Services.Models.AnimalType;
 using AnimalChipization.Services.Models.AnimalVisitedLocation;
@@ -65,6 +68,22 @@ public class ContractsToServicesModelsMappingConfig : Profile
 
         CreateMap<UpdateAreasRequest, UpdateAreaModel>()
             .ForMember(x => x.AreaPoints, p => p.Ignore());
+
+        #endregion
+
+        #region Analytics
+
+        CreateMap<GetAnalyticsRequests, AnalyzeAnimalsMovementModel>()
+            .ForMember(x => x.StartDate, p =>
+                p.MapFrom<DateTime?>(x =>
+                    string.IsNullOrWhiteSpace(x.StartDate)
+                        ? DateTime.MinValue.ToUniversalTime()
+                        : DateTime.ParseExact(x.StartDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1).ToUniversalTime()))
+            .ForMember(x => x.EndDate, p =>
+                p.MapFrom<DateTime?>(x =>
+                    string.IsNullOrWhiteSpace(x.EndDate)
+                        ? DateTime.MaxValue.ToUniversalTime()
+                        : DateTime.ParseExact(x.EndDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).AddDays(1).ToUniversalTime()));
 
         #endregion
     }
