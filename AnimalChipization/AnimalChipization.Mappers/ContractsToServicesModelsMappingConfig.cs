@@ -36,9 +36,7 @@ public class ContractsToServicesModelsMappingConfig : Profile
 
         #region Locations
 
-        CreateMap<UpdateLocationsRequest, UpdateLocationModel>()
-            .ForMember(x => x.Point, p =>
-                p.MapFrom(x => new Point(x.Latitude, x.Longitude)));
+        CreateMap<UpdateLocationsRequest, UpdateLocationModel>();
 
         #endregion
 
@@ -67,7 +65,12 @@ public class ContractsToServicesModelsMappingConfig : Profile
         #region Areas
 
         CreateMap<UpdateAreasRequest, UpdateAreaModel>()
-            .ForMember(x => x.AreaPoints, p => p.Ignore());
+            .ForMember(x => x.AreaPoints, p => p.MapFrom(
+                x =>
+                    string.Join(
+                        ";",
+                        x.AreaPoints.Select(point => $"{point.Latitude.ToString(CultureInfo.InvariantCulture)},{point.Longitude.ToString(CultureInfo.InvariantCulture)}")
+                    )));
 
         #endregion
 

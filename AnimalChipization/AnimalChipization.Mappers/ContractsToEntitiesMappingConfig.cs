@@ -1,3 +1,4 @@
+using System.Globalization;
 using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.AnimalsTypes.Create;
 using AnimalChipization.Api.Contracts.Areas.Create;
@@ -6,8 +7,6 @@ using AnimalChipization.Api.Contracts.Registration.Post;
 using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
-using NetTopologySuite.Geometries;
-using Location = AnimalChipization.Data.Entities.Location;
 
 namespace AnimalChipization.Mappers;
 
@@ -38,9 +37,7 @@ public class ContractsToEntitiesMappingConfig : Profile
 
         #region Locations
 
-        CreateMap<CreateLocationsRequest, Location>()
-            .ForMember(x => x.Point, p =>
-                p.MapFrom(x => new Point(x.Latitude, x.Longitude)));
+        CreateMap<CreateLocationsRequest, Location>();
 
         #endregion
 
@@ -53,7 +50,12 @@ public class ContractsToEntitiesMappingConfig : Profile
         #region Areas
 
         CreateMap<CreateAreasRequest, Area>()
-            .ForMember(x => x.AreaPoints, p => p.Ignore());
+            .ForMember(x => x.AreaPoints, p => p.MapFrom(
+                x =>
+                    string.Join(
+                        ";",
+                        x.AreaPoints.Select(point => $"{point.Latitude.ToString(CultureInfo.InvariantCulture)},{point.Longitude.ToString(CultureInfo.InvariantCulture)}")
+                    )));
 
         #endregion
     }

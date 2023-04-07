@@ -18,8 +18,7 @@ public class PolygonCoordinatesCollectionAttribute : ValidationAttribute
         if (value is not IEnumerable collection) return false;
         var listOfCoordinates = collection.Cast<CoordinatesRequestItem>().ToList();
 
-        var allValid = true;
-        allValid = allValid && listOfCoordinates.Count >= 3;
+        var allValid = listOfCoordinates.Count >= 3;
         allValid = allValid && listOfCoordinates.Any(x => x == null) == false;
         allValid = allValid && listOfCoordinates.DistinctBy(x => new { x.Latitude, x.Longitude }).Count() == listOfCoordinates.Count;
         allValid = allValid && IsAllPointsOnLine(listOfCoordinates) == false;

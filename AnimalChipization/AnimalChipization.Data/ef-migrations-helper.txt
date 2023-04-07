@@ -1,5 +1,7 @@
-dotnet ef migrations add LocationCoordinatesChangedToPoint --project AnimalChipization.Data --startup-project AnimalChipization.Api
+dotnet ef migrations add RemovedPostgis2 --project AnimalChipization.Data --startup-project AnimalChipization.Api
 
 dotnet ef database update --project AnimalChipization.Data --startup-project AnimalChipization.Api
 
 dotnet ef database drop --project AnimalChipization.Data --startup-project AnimalChipization.Api
+
+dotnet ef migrations remove --project AnimalChipization.Data --startup-project AnimalChipization.Api

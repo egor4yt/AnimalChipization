@@ -6,5 +6,5 @@ public class UpdateAreaModel
 {
     public long Id { get; set; }
     public string Name { get; set; }
-    public Polygon AreaPoints { get; set; }
+    public string AreaPoints { get; set; }
 }

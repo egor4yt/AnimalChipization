@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -13,9 +12,6 @@ namespace AnimalChipization.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:postgis", ",,");
-
             migrationBuilder.CreateTable(
                 name: "Areas",
                 columns: table => new
@@ -23,7 +19,7 @@ namespace AnimalChipization.Data.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    AreaPoints = table.Column<Polygon>(type: "geometry", nullable: false),
+                    AreaPoints = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -37,9 +33,6 @@ namespace AnimalChipization.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Areas");
-
-            migrationBuilder.AlterDatabase()
-                .OldAnnotation("Npgsql:PostgresExtension:postgis", ",,");
         }
     }
 }

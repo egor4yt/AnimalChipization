@@ -21,8 +21,6 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.HasPostgresExtension("postgis");
-
         UpdateStructure(builder);
         SeedData(builder);
 

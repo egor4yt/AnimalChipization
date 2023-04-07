@@ -1,4 +1,5 @@
 using AnimalChipization.Core.Exceptions;
+using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Repositories.Interfaces;
 using AnimalChipization.Services.Models.Area;
@@ -24,11 +25,18 @@ public class AreaService : IAreaService
     public async Task CreateAsync(Area area)
     {
         if (area == null) throw new BadRequestException("Area was null");
-        var exists = await _areaRepository.ExistsAsync(x => x.AreaPoints.Within(area.AreaPoints) || x.AreaPoints.Contains(area.AreaPoints));
+
+        var newAreaPolygon = GeometryHelper.PolygonFromString(area.AreaPoints);
+        var allAreas = await _areaRepository.FindAllAsync(x => true);
+
+        var exists = allAreas.Any(x =>
+            GeometryHelper.PolygonFromString(x.AreaPoints).Within(newAreaPolygon)
+            || GeometryHelper.PolygonFromString(x.AreaPoints).Contains(newAreaPolygon)
+        );
         if (exists) throw new BadRequestException("New area should not intersect with old areas");
 
-        var intersectedAreas = await _areaRepository.FindAllAsync(x => x.AreaPoints.Intersects(area.AreaPoints));
-        var geometries = intersectedAreas.Select(x => x.AreaPoints.Intersection(area.AreaPoints)).ToList();
+        var intersectedAreas = allAreas.Where(x => GeometryHelper.PolygonFromString(x.AreaPoints).Intersects(newAreaPolygon)).ToList();
+        var geometries = intersectedAreas.Select(x => GeometryHelper.PolygonFromString(x.AreaPoints).Intersection(newAreaPolygon)).ToList();
         if (geometries.Any(x => x is Polygon)) throw new BadRequestException("New area should not intersect with old areas");
 
         await _areaRepository.InsertAsync(area);
@@ -46,18 +54,22 @@ public class AreaService : IAreaService
         var area = await _areaRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (area == null) throw new BadRequestException($"Area with id {model.Id} does not exists");
         area.AreaPoints = model.AreaPoints;
+        var updatingAreaPolygon = GeometryHelper.PolygonFromString(model.AreaPoints);
+        var allAreas = await _areaRepository.FindAllAsync(x => true);
 
-        var intersects = await _areaRepository.ExistsAsync(x => x.Id != model.Id
-                                                                && (x.AreaPoints.Within(model.AreaPoints)
-                                                                    || x.AreaPoints.Contains(model.AreaPoints)));
+
+        var intersects = allAreas.Any(x => x.Id != model.Id
+                                           && (GeometryHelper.PolygonFromString(x.AreaPoints).Within(updatingAreaPolygon)
+                                               || GeometryHelper.PolygonFromString(x.AreaPoints).Contains(updatingAreaPolygon)));
 
         if (intersects) throw new BadRequestException("Updating area should not intersect with other areas");
 
-        var intersectedAreas = await _areaRepository.FindAllAsync(x => x.Id != model.Id && x.AreaPoints.Intersects(area.AreaPoints));
-        var geometries = intersectedAreas.Select(x => x.AreaPoints.Intersection(area.AreaPoints)).ToList();
+        var intersectedAreas = allAreas.Where(x => x.Id != model.Id
+                                                   && GeometryHelper.PolygonFromString(x.AreaPoints).Intersects(updatingAreaPolygon)).ToList();
+        var geometries = intersectedAreas.Select(x => GeometryHelper.PolygonFromString(x.AreaPoints).Intersection(updatingAreaPolygon)).ToList();
         if (geometries.Any(x => x is Polygon)) throw new BadRequestException("Updating area should not intersect with other areas");
 
-        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id && x.Name == model.Name); // todo: Зона, состоящая из таких точек, уже существует. (При этом важен порядок, в котором указаны точки, но не важна начальная точка).
+        var exists = await _areaRepository.ExistsAsync(x => x.Id != model.Id && x.Name == model.Name);
         if (exists) throw new ConflictException("Similar area already exists");
 
         return await _areaRepository.UpdateAsync(area);

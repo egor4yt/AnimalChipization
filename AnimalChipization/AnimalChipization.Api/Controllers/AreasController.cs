@@ -1,9 +1,12 @@
+using System.Globalization;
 using AnimalChipization.Api.Contracts.Accounts.Create;
 using AnimalChipization.Api.Contracts.Areas.Create;
 using AnimalChipization.Api.Contracts.Areas.GetById;
 using AnimalChipization.Api.Contracts.Areas.Update;
+using AnimalChipization.Api.Contracts.Shared;
 using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Core.Exceptions;
+using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Area;
@@ -40,6 +43,13 @@ public class AreasController : ApiControllerBase
             if (area is null) throw new NotFoundException($"Area with id {areaId} not found");
 
             var response = Mapper.Map<GetByIdAreasResponse>(area);
+            response.AreaPoints = area.AreaPoints.Split(";").Select(
+                x => new CoordinatesRequestItem
+                {
+                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+                }).ToList();
+            
             return Ok(response);
         }
         catch (Exception e)
@@ -57,16 +67,16 @@ public class AreasController : ApiControllerBase
         try
         {
             var area = Mapper.Map<Area>(request);
-            // todo: move  creating polygon in auto mapper configs
-            var pointsForPolygon = request.AreaPoints.Select(areaPoint => new Coordinate(areaPoint.Latitude, areaPoint.Longitude)).ToList();
-            pointsForPolygon.Add(pointsForPolygon[0]);
-
-            var linearRing = new LinearRing(pointsForPolygon.ToArray());
-            area.AreaPoints = new Polygon(linearRing);
-
             await _areaService.CreateAsync(area);
 
             var response = Mapper.Map<CreateAreasResponse>(area);
+            response.AreaPoints = area.AreaPoints.Split(";").Select(
+                x => new CoordinatesRequestItem
+                {
+                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+                }).ToList();
+            
             return Created($"/areas/{response.Id}", response);
         }
         catch (Exception e)
@@ -104,16 +114,17 @@ public class AreasController : ApiControllerBase
         {
             var updateAreaModel = Mapper.Map<UpdateAreaModel>(request);
             updateAreaModel.Id = areaId;
-            // todo: move  creating polygon in auto mapper configs
-            var pointsForPolygon = request.AreaPoints.Select(areaPoint => new Coordinate(areaPoint.Latitude, areaPoint.Longitude)).ToList();
-            pointsForPolygon.Add(pointsForPolygon[0]);
-
-            var linearRing = new LinearRing(pointsForPolygon.ToArray());
-            updateAreaModel.AreaPoints = new Polygon(linearRing);
-
+            
             var updatedArea = await _areaService.UpdateAsync(updateAreaModel);
-
             var response = Mapper.Map<UpdateAreasResponse>(updatedArea);
+            
+            response.AreaPoints = updatedArea.AreaPoints.Split(";").Select(
+                x => new CoordinatesRequestItem
+                {
+                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+                }).ToList();
+            
             return Ok(response);
         }
         catch (Exception e)

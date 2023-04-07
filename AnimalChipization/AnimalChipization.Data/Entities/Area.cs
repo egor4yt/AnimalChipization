@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Data.Entities;
 
@@ -11,5 +10,5 @@ public class Area : EntityBase
     public string Name { get; set; }
 
     [Required]
-    public Polygon AreaPoints { get; set; }
+    public string AreaPoints { get; set; }
 }

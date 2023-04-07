@@ -22,7 +22,6 @@ using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Api.Contracts.Registration.Post;
-using AnimalChipization.Api.Contracts.Shared;
 using AnimalChipization.Core.Extensions;
 using AnimalChipization.Data.Entities;
 using AutoMapper;
@@ -45,17 +44,11 @@ public class EntitiesToContractsMappingConfig : Profile
 
         #region Location
 
-        CreateMap<Location, GetByIdLocationsResponse>()
-            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
-            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
+        CreateMap<Location, GetByIdLocationsResponse>();
 
-        CreateMap<Location, CreateLocationsResponse>()
-            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
-            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
+        CreateMap<Location, CreateLocationsResponse>();
 
-        CreateMap<Location, UpdateLocationsResponse>()
-            .ForMember(x => x.Latitude, p => p.MapFrom(x => x.Point.X))
-            .ForMember(x => x.Longitude, p => p.MapFrom(x => x.Point.Y));
+        CreateMap<Location, UpdateLocationsResponse>();
 
         #endregion
 
@@ -154,24 +147,15 @@ public class EntitiesToContractsMappingConfig : Profile
 
         CreateMap<Area, CreateAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
-                p.MapFrom(x =>
-                    x.AreaPoints.Coordinates
-                        .SkipLast(1)
-                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
+                p.Ignore());
 
         CreateMap<Area, GetByIdAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
-                p.MapFrom(x =>
-                    x.AreaPoints.Coordinates
-                        .SkipLast(1)
-                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
-
+                p.Ignore());
+        
         CreateMap<Area, UpdateAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
-                p.MapFrom(x =>
-                    x.AreaPoints.Coordinates
-                        .SkipLast(1)
-                        .Select(c => new CoordinatesRequestItem { Latitude = c.CoordinateValue.X, Longitude = c.CoordinateValue.Y })));
+                p.Ignore());
 
         #endregion
     }
