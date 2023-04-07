@@ -20,6 +20,11 @@ public class LocationService : ILocationService
         return await _locationRepository.FindFirstOrDefaultAsync(x => x.Id == locationId);
     }
 
+    public async Task<Location?> SearchByCoordinates(double latitude, double longitude)
+    {
+        return await _locationRepository.FindFirstOrDefaultAsync(x => Math.Abs(x.Latitude - latitude) < 0.01 && Math.Abs(x.Longitude - longitude) < 0.01);
+    }
+
     public async Task CreateAsync(Location location)
     {
         if (location == null) throw new BadRequestException("Location was null");
