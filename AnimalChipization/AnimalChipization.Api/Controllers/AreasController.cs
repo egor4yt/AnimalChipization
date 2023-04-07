@@ -6,7 +6,6 @@ using AnimalChipization.Api.Contracts.Areas.Update;
 using AnimalChipization.Api.Contracts.Shared;
 using AnimalChipization.Api.Contracts.Validation;
 using AnimalChipization.Core.Exceptions;
-using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Area;
@@ -14,7 +13,6 @@ using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Api.Controllers;
 
@@ -49,7 +47,7 @@ public class AreasController : ApiControllerBase
                     Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
                     Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
                 }).ToList();
-            
+
             return Ok(response);
         }
         catch (Exception e)
@@ -76,7 +74,7 @@ public class AreasController : ApiControllerBase
                     Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
                     Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
                 }).ToList();
-            
+
             return Created($"/areas/{response.Id}", response);
         }
         catch (Exception e)
@@ -114,17 +112,17 @@ public class AreasController : ApiControllerBase
         {
             var updateAreaModel = Mapper.Map<UpdateAreaModel>(request);
             updateAreaModel.Id = areaId;
-            
+
             var updatedArea = await _areaService.UpdateAsync(updateAreaModel);
             var response = Mapper.Map<UpdateAreasResponse>(updatedArea);
-            
+
             response.AreaPoints = updatedArea.AreaPoints.Split(";").Select(
                 x => new CoordinatesRequestItem
                 {
                     Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
                     Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
                 }).ToList();
-            
+
             return Ok(response);
         }
         catch (Exception e)

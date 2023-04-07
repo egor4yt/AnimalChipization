@@ -23,9 +23,11 @@ public class AnimalRepository : RepositoryBase<Animal>, IAnimalRepository
     public async Task<List<Animal>> FindAllFullAsync(Expression<Func<Animal, bool>> match)
     {
         return await DbSet
+            .Include(x => x.AnimalTypes)
+            .Include(x=>x.ChippingLocation)
             .Include(l => l
                 .AnimalVisitedLocations.OrderBy(x => x.CreatedAt))
-            .Include(x => x.AnimalTypes)
+            .ThenInclude(x => x.Location)
             .Where(match)
             .ToListAsync();
     }
