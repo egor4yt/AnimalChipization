@@ -53,16 +53,17 @@ public class AreaService : IAreaService
     {
         var area = await _areaRepository.FindFirstOrDefaultAsync(x => x.Id == model.Id);
         if (area == null) throw new BadRequestException($"Area with id {model.Id} does not exists");
+        
         area.AreaPoints = model.AreaPoints;
         var updatingAreaPolygon = GeometryHelper.PolygonFromString(model.AreaPoints);
         var allAreas = await _areaRepository.FindAllAsync(x => true);
 
 
-        var intersects = allAreas.Any(x => x.Id != model.Id
+        var hasIntersection = allAreas.Any(x => x.Id != model.Id
                                            && (GeometryHelper.PolygonFromString(x.AreaPoints).Within(updatingAreaPolygon)
                                                || GeometryHelper.PolygonFromString(x.AreaPoints).Contains(updatingAreaPolygon)));
 
-        if (intersects) throw new BadRequestException("Updating area should not intersect with other areas");
+        if (hasIntersection) throw new BadRequestException("Updating area should not intersect with other areas");
 
         var intersectedAreas = allAreas.Where(x => x.Id != model.Id
                                                    && GeometryHelper.PolygonFromString(x.AreaPoints).Intersects(updatingAreaPolygon)).ToList();

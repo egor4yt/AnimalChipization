@@ -25,7 +25,7 @@ public abstract class ApiControllerBase : ControllerBase
     {
         if (exception is AggregateException aggregateEx)
             foreach (var innerException in aggregateEx.InnerExceptions)
-                Logger.LogError(innerException, "Something went wrong: {Message}", innerException.Message);
+                Logger.LogError(innerException, "Something went wrong: {Message}", GetErrorMessage(innerException));
         else
             Logger.LogError(exception, "Something went wrong: {Message}", exception.Message);
 

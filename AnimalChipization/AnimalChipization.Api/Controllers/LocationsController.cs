@@ -1,16 +1,13 @@
-using System.Collections;
 using AnimalChipization.Api.Contracts.Locations.Create;
 using AnimalChipization.Api.Contracts.Locations.GetById;
 using AnimalChipization.Api.Contracts.Locations.Update;
 using AnimalChipization.Api.Contracts.Shared;
 using AnimalChipization.Api.Contracts.Validation;
-using AnimalChipization.Core.Helpers;
 using AnimalChipization.Data.Entities;
 using AnimalChipization.Data.Entities.Constants;
 using AnimalChipization.Services.Models.Location;
 using AnimalChipization.Services.Services.Interfaces;
 using AutoMapper;
-using Geohash;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +27,7 @@ public class LocationsController : ApiControllerBase
     [HttpGet]
     [Produces("text/plain")]
     [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> SecretEndpoint1([FromQuery] CoordinatesRequestItem request)
+    public async Task<IActionResult> GetLocationIdByCoordinates([FromQuery] CoordinatesRequestItem request)
     {
         try
         {
@@ -39,68 +36,6 @@ public class LocationsController : ApiControllerBase
 
 
             return Ok(location.Id.ToString());
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
-    }
-
-    [HttpGet("geohash")]
-    [Produces("text/plain")]
-    [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetGeoHash([FromQuery] CoordinatesRequestItem request)
-    {
-        try
-        {
-            var location = await _locationService.SearchByCoordinates(request.Latitude, request.Longitude);
-            if (location is null) return NotFound($"Location with latitude {request.Latitude} and longitude {request.Longitude} does not exists");
-
-            var hasher = new Geohasher();
-            var hash = hasher.Encode(location.Latitude, location.Longitude, 12);
-            return Ok(hash);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
-    }
-
-    [HttpGet("geohashv2")]
-    [Produces("text/plain")]
-    [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetGeoHash2([FromQuery] CoordinatesRequestItem request)
-    {
-        try
-        {
-            var location = await _locationService.SearchByCoordinates(request.Latitude, request.Longitude);
-            if (location is null) return NotFound($"Location with latitude {request.Latitude} and longitude {request.Longitude} does not exists");
-
-            var hasher = new Geohasher();
-            var hash = hasher.Encode(location.Latitude, location.Longitude, 12);
-            var base64Hash = SecurityHelper.Base64Encode(hash);
-            return Ok(base64Hash);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
-    }
-
-    [HttpGet("geohashv3")]
-    [Produces("text/plain")]
-    [Authorize("AllowAnonymous")]
-    public async Task<IActionResult> GetGeoHash3([FromQuery] CoordinatesRequestItem request)
-    {
-        try
-        {
-            var location = await _locationService.SearchByCoordinates(request.Latitude, request.Longitude);
-            if (location is null) return NotFound($"Location with latitude {request.Latitude} and longitude {request.Longitude} does not exists");
-
-            var hasher = new Geohasher();
-            var hash = hasher.Encode(location.Latitude, location.Longitude, 12);
-            var superHash = SecurityHelper.CalculateGeoHashV3(hash);
-            return Ok(superHash);
         }
         catch (Exception e)
         {
