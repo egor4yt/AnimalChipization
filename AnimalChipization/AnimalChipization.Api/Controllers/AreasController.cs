@@ -22,9 +22,8 @@ public class AreasController : ApiControllerBase
     private readonly IAreaService _areaService;
 
     public AreasController(IMapper mapper,
-        IAreaService areaService,
-        ILogger<AreasController> logger) :
-        base(logger, mapper)
+        IAreaService areaService) :
+        base(mapper)
     {
         _areaService = areaService;
     }
@@ -35,25 +34,18 @@ public class AreasController : ApiControllerBase
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long areaId)
     {
-        try
-        {
-            var area = await _areaService.GetByIdAsync(areaId);
-            if (area is null) throw new NotFoundException($"Area with id {areaId} not found");
+        var area = await _areaService.GetByIdAsync(areaId);
+        if (area is null) throw new NotFoundException($"Area with id {areaId} not found");
 
-            var response = Mapper.Map<GetByIdAreasResponse>(area);
-            response.AreaPoints = area.AreaPoints.Split(";").Select(
-                x => new CoordinatesRequestItem
-                {
-                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
-                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
-                }).ToList();
+        var response = Mapper.Map<GetByIdAreasResponse>(area);
+        response.AreaPoints = area.AreaPoints.Split(";").Select(
+            x => new CoordinatesRequestItem
+            {
+                Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+            }).ToList();
 
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        return Ok(response);
     }
 
     [HttpPost]
@@ -62,25 +54,18 @@ public class AreasController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] CreateAreasRequest request)
     {
-        try
-        {
-            var area = Mapper.Map<Area>(request);
-            await _areaService.CreateAsync(area);
+        var area = Mapper.Map<Area>(request);
+        await _areaService.CreateAsync(area);
 
-            var response = Mapper.Map<CreateAreasResponse>(area);
-            response.AreaPoints = area.AreaPoints.Split(";").Select(
-                x => new CoordinatesRequestItem
-                {
-                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
-                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
-                }).ToList();
+        var response = Mapper.Map<CreateAreasResponse>(area);
+        response.AreaPoints = area.AreaPoints.Split(";").Select(
+            x => new CoordinatesRequestItem
+            {
+                Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+            }).ToList();
 
-            return Created($"/areas/{response.Id}", response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        return Created($"/areas/{response.Id}", response);
     }
 
     [HttpDelete("{areaId:long}")]
@@ -90,15 +75,8 @@ public class AreasController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long areaId)
     {
-        try
-        {
-            await _areaService.DeleteAsync(areaId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        await _areaService.DeleteAsync(areaId);
+        return Ok();
     }
 
     [HttpPut("{areaId:long}")]
@@ -108,26 +86,19 @@ public class AreasController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long areaId, [FromBody] UpdateAreasRequest request)
     {
-        try
-        {
-            var updateAreaModel = Mapper.Map<UpdateAreaModel>(request);
-            updateAreaModel.Id = areaId;
+        var updateAreaModel = Mapper.Map<UpdateAreaModel>(request);
+        updateAreaModel.Id = areaId;
 
-            var updatedArea = await _areaService.UpdateAsync(updateAreaModel);
-            var response = Mapper.Map<UpdateAreasResponse>(updatedArea);
+        var updatedArea = await _areaService.UpdateAsync(updateAreaModel);
+        var response = Mapper.Map<UpdateAreasResponse>(updatedArea);
 
-            response.AreaPoints = updatedArea.AreaPoints.Split(";").Select(
-                x => new CoordinatesRequestItem
-                {
-                    Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
-                    Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
-                }).ToList();
+        response.AreaPoints = updatedArea.AreaPoints.Split(";").Select(
+            x => new CoordinatesRequestItem
+            {
+                Latitude = double.Parse(x.Split(",")[0], CultureInfo.InvariantCulture),
+                Longitude = double.Parse(x.Split(",")[1], CultureInfo.InvariantCulture)
+            }).ToList();
 
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        return Ok(response);
     }
 }

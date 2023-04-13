@@ -2,13 +2,9 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions;
 
-public class NotFoundException : Exception, IApiException
+public class NotFoundException : ApiException
 {
-    public NotFoundException(string apiMessage)
+    public NotFoundException(string apiMessage) : base(apiMessage, HttpStatusCode.NotFound)
     {
-        ApiMessage = apiMessage;
     }
-
-    public string ApiMessage { get; }
-    public HttpStatusCode HttpStatusCode => HttpStatusCode.NotFound;
 }

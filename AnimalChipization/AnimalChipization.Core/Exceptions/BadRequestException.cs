@@ -2,13 +2,9 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions;
 
-public class BadRequestException : Exception, IApiException
+public class BadRequestException : ApiException
 {
-    public BadRequestException(string apiMessage)
+    public BadRequestException(string apiMessage) : base(apiMessage, HttpStatusCode.BadRequest)
     {
-        ApiMessage = apiMessage;
     }
-
-    public string ApiMessage { get; }
-    public HttpStatusCode HttpStatusCode => HttpStatusCode.BadRequest;
 }

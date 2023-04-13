@@ -17,7 +17,8 @@ public class AnimalsTypesController : ApiControllerBase
 {
     private readonly IAnimalTypeService _animalTypeService;
 
-    public AnimalsTypesController(ILogger<AnimalsTypesController> logger, IMapper mapper, IAnimalTypeService animalTypeService) : base(logger, mapper)
+    public AnimalsTypesController(IMapper mapper,
+        IAnimalTypeService animalTypeService) : base(mapper)
     {
         _animalTypeService = animalTypeService;
     }
@@ -28,18 +29,11 @@ public class AnimalsTypesController : ApiControllerBase
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
-        try
-        {
-            var animalType = await _animalTypeService.GetByIdAsync(animalTypeId);
-            if (animalType is null) return NotFound($"Animal type with id {animalTypeId} not found");
+        var animalType = await _animalTypeService.GetByIdAsync(animalTypeId);
+        if (animalType is null) return NotFound($"Animal type with id {animalTypeId} not found");
 
-            var response = Mapper.Map<GetByIdAnimalsTypesResponse>(animalType);
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var response = Mapper.Map<GetByIdAnimalsTypesResponse>(animalType);
+        return Ok(response);
     }
 
     [HttpPost]
@@ -48,18 +42,11 @@ public class AnimalsTypesController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Create([FromBody] CreateAnimalsTypesRequest request)
     {
-        try
-        {
-            var animalType = Mapper.Map<AnimalType>(request);
-            await _animalTypeService.CreateAsync(animalType);
+        var animalType = Mapper.Map<AnimalType>(request);
+        await _animalTypeService.CreateAsync(animalType);
 
-            var response = Mapper.Map<CreateAnimalsTypesResponse>(animalType);
-            return Created($"/animals/types/{response.Id}", response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var response = Mapper.Map<CreateAnimalsTypesResponse>(animalType);
+        return Created($"/animals/types/{response.Id}", response);
     }
 
     [HttpPut("{animalTypeId:long}")]
@@ -69,19 +56,12 @@ public class AnimalsTypesController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long animalTypeId, [FromBody] UpdateAnimalsTypesRequest request)
     {
-        try
-        {
-            var updateModel = Mapper.Map<UpdateAnimalTypeModel>(request);
-            updateModel.Id = animalTypeId;
+        var updateModel = Mapper.Map<UpdateAnimalTypeModel>(request);
+        updateModel.Id = animalTypeId;
 
-            var animalType = await _animalTypeService.UpdateAsync(updateModel);
-            var response = Mapper.Map<UpdateAnimalsTypesResponse>(animalType);
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var animalType = await _animalTypeService.UpdateAsync(updateModel);
+        var response = Mapper.Map<UpdateAnimalsTypesResponse>(animalType);
+        return Ok(response);
     }
 
     [HttpDelete("{animalTypeId:long}")]
@@ -90,14 +70,7 @@ public class AnimalsTypesController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
-        try
-        {
-            await _animalTypeService.DeleteAsync(animalTypeId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        await _animalTypeService.DeleteAsync(animalTypeId);
+        return Ok();
     }
 }

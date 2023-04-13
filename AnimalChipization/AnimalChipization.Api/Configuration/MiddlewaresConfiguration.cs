@@ -1,3 +1,5 @@
+using AnimalChipization.Api.Middlewares;
+
 namespace AnimalChipization.Api.Configuration;
 
 public static class MiddlewaresConfiguration
@@ -19,11 +21,15 @@ public static class MiddlewaresConfiguration
 
         app.UseSwagger();
         app.UseSwaggerUI();
-        app.UseDeveloperExceptionPage();
+        // app.UseDeveloperExceptionPage();
+        
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
     }
 
     private static void ConfigureProductionMiddlewares(this WebApplication app)
     {
         if (app.Environment.IsDevelopment()) return;
+        
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
     }
 }

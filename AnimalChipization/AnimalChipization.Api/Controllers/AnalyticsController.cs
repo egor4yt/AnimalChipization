@@ -12,7 +12,8 @@ public class AnalyticsController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
 
-    public AnalyticsController(ILogger<AnalyticsController> logger, IMapper mapper, IAnalyticsService analyticsService) : base(logger, mapper)
+    public AnalyticsController(IMapper mapper,
+        IAnalyticsService analyticsService) : base(mapper)
     {
         _analyticsService = analyticsService;
     }
@@ -22,18 +23,11 @@ public class AnalyticsController : ApiControllerBase
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Get([FromRoute] long areaId, [FromQuery] GetAnalyticsRequests request)
     {
-        try
-        {
-            var model = Mapper.Map<AnalyzeAnimalsMovementModel>(request);
-            model.AreaId = areaId;
+        var model = Mapper.Map<AnalyzeAnimalsMovementModel>(request);
+        model.AreaId = areaId;
 
-            var serviceResponse = await _analyticsService.AnalyzeAnimalsMovement(model);
-            var controllerResponse = Mapper.Map<GetAnalyticsResponse>(serviceResponse);
-            return Ok(controllerResponse);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var serviceResponse = await _analyticsService.AnalyzeAnimalsMovement(model);
+        var controllerResponse = Mapper.Map<GetAnalyticsResponse>(serviceResponse);
+        return Ok(controllerResponse);
     }
 }

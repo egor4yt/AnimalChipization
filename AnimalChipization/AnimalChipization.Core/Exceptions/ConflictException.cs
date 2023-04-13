@@ -2,13 +2,9 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions;
 
-public class ConflictException : Exception, IApiException
+public class ConflictException : ApiException
 {
-    public ConflictException(string apiMessage)
+    public ConflictException(string apiMessage) : base(apiMessage, HttpStatusCode.Conflict)
     {
-        ApiMessage = apiMessage;
     }
-
-    public string ApiMessage { get; }
-    public HttpStatusCode HttpStatusCode => HttpStatusCode.Conflict;
 }

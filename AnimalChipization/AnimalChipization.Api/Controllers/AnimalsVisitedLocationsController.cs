@@ -16,7 +16,8 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
 {
     private readonly IAnimalVisitedLocationService _animalVisitedLocationService;
 
-    public AnimalsVisitedLocationsController(ILogger<AnimalsVisitedLocationsController> logger, IMapper mapper, IAnimalVisitedLocationService animalVisitedLocationService) : base(logger, mapper)
+    public AnimalsVisitedLocationsController(IMapper mapper,
+        IAnimalVisitedLocationService animalVisitedLocationService) : base(mapper)
     {
         _animalVisitedLocationService = animalVisitedLocationService;
     }
@@ -27,18 +28,11 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Get([FromRoute] [GreaterThan(0L)] long animalId, [FromQuery] GetAnimalsVisitedLocationsRequest request)
     {
-        try
-        {
-            var getModel = Mapper.Map<GetAnimalVisitedLocationModel>(request);
-            getModel.AnimalId = animalId;
-            var visitedLocations = await _animalVisitedLocationService.GetAsync(getModel);
-            var response = Mapper.Map<IEnumerable<GetAnimalsVisitedLocationsResponseItem>>(visitedLocations);
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var getModel = Mapper.Map<GetAnimalVisitedLocationModel>(request);
+        getModel.AnimalId = animalId;
+        var visitedLocations = await _animalVisitedLocationService.GetAsync(getModel);
+        var response = Mapper.Map<IEnumerable<GetAnimalsVisitedLocationsResponseItem>>(visitedLocations);
+        return Ok(response);
     }
 
     [HttpPost("{pointId:long}")]
@@ -47,16 +41,9 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Add([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long pointId)
     {
-        try
-        {
-            var visitedLocation = await _animalVisitedLocationService.AddAsync(animalId, pointId);
-            var response = Mapper.Map<AddAnimalsVisitedLocationsResponse>(visitedLocation);
-            return Created($"/animals/{response.Id}", response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var visitedLocation = await _animalVisitedLocationService.AddAsync(animalId, pointId);
+        var response = Mapper.Map<AddAnimalsVisitedLocationsResponse>(visitedLocation);
+        return Created($"/animals/{response.Id}", response);
     }
 
     [HttpDelete("{visitedPointId:long}")]
@@ -65,15 +52,8 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> DeleteVisitedLocation([FromRoute] [GreaterThan(0L)] long animalId, [GreaterThan(0L)] [FromRoute] long visitedPointId)
     {
-        try
-        {
-            await _animalVisitedLocationService.DeleteAsync(animalId, visitedPointId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        await _animalVisitedLocationService.DeleteAsync(animalId, visitedPointId);
+        return Ok();
     }
 
     [HttpPut]
@@ -82,18 +62,11 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [Authorize("RequireAuthenticated", Roles = $"{AccountRole.Administrator},{AccountRole.Chipper}")]
     public async Task<IActionResult> Update([GreaterThan(0L)] long animalId, [FromBody] UpdateAnimalsVisitedLocationsRequest request)
     {
-        try
-        {
-            var updateModel = Mapper.Map<UpdateAnimalVisitedLocationModel>(request);
-            updateModel.AnimalId = animalId;
+        var updateModel = Mapper.Map<UpdateAnimalVisitedLocationModel>(request);
+        updateModel.AnimalId = animalId;
 
-            var account = await _animalVisitedLocationService.UpdateAsync(updateModel);
-            var response = Mapper.Map<UpdateAnimalsVisitedLocationsResponse>(account);
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            return ExceptionResult(e);
-        }
+        var account = await _animalVisitedLocationService.UpdateAsync(updateModel);
+        var response = Mapper.Map<UpdateAnimalsVisitedLocationsResponse>(account);
+        return Ok(response);
     }
 }

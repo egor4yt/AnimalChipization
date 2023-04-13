@@ -2,13 +2,9 @@ using System.Net;
 
 namespace AnimalChipization.Core.Exceptions;
 
-public class ForbiddenException : Exception, IApiException
+public class ForbiddenException : ApiException
 {
-    public ForbiddenException(string apiMessage)
+    public ForbiddenException(string apiMessage) : base(apiMessage, HttpStatusCode.Forbidden)
     {
-        ApiMessage = apiMessage;
     }
-
-    public string ApiMessage { get; }
-    public HttpStatusCode HttpStatusCode => HttpStatusCode.Forbidden;
 }

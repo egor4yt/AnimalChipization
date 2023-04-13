@@ -9,7 +9,7 @@ namespace AnimalChipization.Api.Controllers;
 [AllowAnonymous]
 public class HealthCheckController : ApiControllerBase
 {
-    public HealthCheckController(ILogger<HealthCheckController> logger, IMapper mapper) : base(logger, mapper)
+    public HealthCheckController(IMapper mapper) : base(mapper)
     {
     }
 
@@ -18,7 +18,6 @@ public class HealthCheckController : ApiControllerBase
     public IActionResult Get()
     {
         var response = new HealthCheckGetResponse { Message = "Ok" };
-        Logger.LogInformation("Health check perform occurred");
         return Ok(response);
     }
 }
