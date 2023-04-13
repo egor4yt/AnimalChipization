@@ -24,7 +24,7 @@ public class AnimalRepository : RepositoryBase<Animal>, IAnimalRepository
     {
         return await DbSet
             .Include(x => x.AnimalTypes)
-            .Include(x=>x.ChippingLocation)
+            .Include(x => x.ChippingLocation)
             .Include(l => l
                 .AnimalVisitedLocations.OrderBy(x => x.CreatedAt))
             .ThenInclude(x => x.Location)

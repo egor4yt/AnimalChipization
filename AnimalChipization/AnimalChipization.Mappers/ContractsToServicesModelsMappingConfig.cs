@@ -19,7 +19,6 @@ using AnimalChipization.Services.Models.AnimalVisitedLocation;
 using AnimalChipization.Services.Models.Area;
 using AnimalChipization.Services.Models.Location;
 using AutoMapper;
-using NetTopologySuite.Geometries;
 
 namespace AnimalChipization.Mappers;
 

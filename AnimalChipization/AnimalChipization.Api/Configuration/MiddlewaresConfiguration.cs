@@ -22,14 +22,14 @@ public static class MiddlewaresConfiguration
         app.UseSwagger();
         app.UseSwaggerUI();
         // app.UseDeveloperExceptionPage();
-        
+
         app.UseMiddleware<ExceptionHandlerMiddleware>();
     }
 
     private static void ConfigureProductionMiddlewares(this WebApplication app)
     {
         if (app.Environment.IsDevelopment()) return;
-        
+
         app.UseMiddleware<ExceptionHandlerMiddleware>();
     }
 }

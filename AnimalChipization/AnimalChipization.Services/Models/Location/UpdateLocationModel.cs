@@ -1,5 +1,3 @@
-using NetTopologySuite.Geometries;
-
 namespace AnimalChipization.Services.Models.Location;
 
 public class UpdateLocationModel

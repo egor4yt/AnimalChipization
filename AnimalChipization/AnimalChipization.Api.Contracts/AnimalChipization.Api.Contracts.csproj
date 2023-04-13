@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj" />
-        <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj" />
+        <ProjectReference Include="..\AnimalChipization.Core\AnimalChipization.Core.csproj"/>
+        <ProjectReference Include="..\AnimalChipization.Data\AnimalChipization.Data.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="7.0.3" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="7.0.3"/>
     </ItemGroup>
 
 </Project>

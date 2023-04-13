@@ -152,7 +152,7 @@ public class EntitiesToContractsMappingConfig : Profile
         CreateMap<Area, GetByIdAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
                 p.Ignore());
-        
+
         CreateMap<Area, UpdateAreasResponse>()
             .ForMember(x => x.AreaPoints, p =>
                 p.Ignore());

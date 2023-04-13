@@ -9,6 +9,7 @@ public abstract class ApiException : Exception, IApiException
         ApiMessage = apiMessage;
         HttpStatusCode = httpStatusCode;
     }
+
     public string ApiMessage { get; }
     public HttpStatusCode HttpStatusCode { get; }
 }
