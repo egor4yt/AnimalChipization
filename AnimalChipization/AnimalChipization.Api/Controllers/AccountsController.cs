@@ -31,7 +31,7 @@ public class AccountsController : ApiControllerBase
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(GetByIdAccountsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0)] int accountId)
     {
         try
@@ -53,7 +53,7 @@ public class AccountsController : ApiControllerBase
     [HttpGet("search")]
     [ProducesResponseType(typeof(IEnumerable<SearchAccountsResponseItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
-    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Search([FromQuery] SearchAccountsRequests request)
     {
         try
@@ -72,7 +72,7 @@ public class AccountsController : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateAccountsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
-    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] CreateAccountsRequest request)
     {
         try

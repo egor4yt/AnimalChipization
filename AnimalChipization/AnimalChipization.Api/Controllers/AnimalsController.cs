@@ -28,7 +28,7 @@ public class AnimalsController : ApiControllerBase
     [HttpGet("{animalId:long}")]
     [ProducesResponseType(typeof(GetByIdAnimalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long animalId)
     {
         try
@@ -47,7 +47,7 @@ public class AnimalsController : ApiControllerBase
 
     [HttpGet("search")]
     [ProducesResponseType(typeof(IEnumerable<SearchAnimalsResponseItem>), StatusCodes.Status200OK)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Search([FromQuery] SearchAnimalsRequests request)
     {
         try

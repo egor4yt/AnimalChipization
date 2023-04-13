@@ -25,7 +25,7 @@ public class AnimalsTypesController : ApiControllerBase
     [HttpGet("{animalTypeId:long}")]
     [ProducesResponseType(typeof(GetByIdAnimalsTypesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long animalTypeId)
     {
         try

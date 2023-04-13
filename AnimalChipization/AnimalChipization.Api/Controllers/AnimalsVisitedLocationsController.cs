@@ -24,7 +24,7 @@ public class AnimalsVisitedLocationsController : ApiControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<GetAnimalsVisitedLocationsResponseItem>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> Get([FromRoute] [GreaterThan(0L)] long animalId, [FromQuery] GetAnimalsVisitedLocationsRequest request)
     {
         try

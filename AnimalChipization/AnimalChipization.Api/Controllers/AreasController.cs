@@ -32,7 +32,7 @@ public class AreasController : ApiControllerBase
     [HttpGet("{areaId:long}")]
     [ProducesResponseType(typeof(GetByIdAreasResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long areaId)
     {
         try
@@ -59,7 +59,7 @@ public class AreasController : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateAccountsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
-    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] CreateAreasRequest request)
     {
         try
@@ -87,7 +87,7 @@ public class AreasController : ApiControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] [GreaterThan(0L)] long areaId)
     {
         try
@@ -105,7 +105,7 @@ public class AreasController : ApiControllerBase
     [ProducesResponseType(typeof(UpdateAreasResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    [Authorize("AllowAnonymous", Roles = AccountRole.Administrator)]
+    [Authorize("RequireAuthenticated", Roles = AccountRole.Administrator)]
     public async Task<IActionResult> Update([FromRoute] [GreaterThan(0L)] long areaId, [FromBody] UpdateAreasRequest request)
     {
         try

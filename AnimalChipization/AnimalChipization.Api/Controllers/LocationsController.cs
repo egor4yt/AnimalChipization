@@ -46,7 +46,7 @@ public class LocationsController : ApiControllerBase
     [HttpGet("{pointId:long}")]
     [ProducesResponseType(typeof(GetByIdLocationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [Authorize("AllowAnonymous")]
+    [Authorize("RequireAuthenticated")]
     public async Task<IActionResult> GetById([FromRoute] [GreaterThan(0L)] long pointId)
     {
         try

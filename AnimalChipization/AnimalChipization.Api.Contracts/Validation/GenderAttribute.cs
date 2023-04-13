@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AnimalChipization.Data.Entities.Constants;
 
 namespace AnimalChipization.Api.Contracts.Validation;
 
@@ -16,7 +17,7 @@ public class GenderAttribute : ValidationAttribute
     {
         return value?.ToString() switch
         {
-            "MALE" or "FEMALE" or "OTHER" => true,
+            Gender.Male or Gender.Female or Gender.Other => true,
             null => AllowNull,
             _ => false
         };

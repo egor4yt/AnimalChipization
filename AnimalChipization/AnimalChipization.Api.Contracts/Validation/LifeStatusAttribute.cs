@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AnimalChipization.Data.Entities.Constants;
 
 namespace AnimalChipization.Api.Contracts.Validation;
 
@@ -16,7 +17,7 @@ public class LifeStatusAttribute : ValidationAttribute
     {
         return value?.ToString() switch
         {
-            "ALIVE" or "DEAD" => true,
+            LifeStatus.Alive or LifeStatus.Dead => true,
             null => AllowNull,
             _ => false
         };
